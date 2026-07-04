@@ -1,31 +1,16 @@
 import Link from 'next/link'
 import { sql } from '@/lib/supabase'
+import { getBusinessFromCookies } from '@/lib/auth'
+import { NoAccess, DashboardHeader } from './_components'
 
-export default async function DashboardPage({ searchParams }: { searchParams: { biz?: string } }) {
-  const bizId = searchParams.biz
+export const dynamic = 'force-dynamic'
 
-  if (!bizId) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-gray-500 mb-4">Koi business selected nahi.</p>
-          <Link href="/onboarding" className="text-green-600 font-medium">Pehle setup karein →</Link>
-        </div>
-      </main>
-    )
-  }
+export default async function DashboardPage() {
+  const business = await getBusinessFromCookies()
 
-  // Fetch business
-  const bizResult = await sql`SELECT * FROM businesses WHERE id = ${bizId} LIMIT 1`
-  const business = (bizResult as any[])[0]
+  if (!business) return <NoAccess />
 
-  if (!business) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-red-500">Business nahi mila.</p>
-      </main>
-    )
-  }
+  const bizId = business.id
 
   // Today's stats
   const today = new Date()
@@ -52,20 +37,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-100 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🤖</span>
-            <div>
-              <h1 className="font-bold text-lg">{business.business_name}</h1>
-              <p className="text-xs text-gray-400">SellBot Dashboard</p>
-            </div>
-          </div>
-          <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
-            {business.plan === 'trial' ? '14 Din Free Trial' : business.plan.toUpperCase()}
-          </span>
-        </div>
-      </header>
+      <DashboardHeader business={business} />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
@@ -86,10 +58,28 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          <NavCard href={`/dashboard/orders?biz=${bizId}`} icon="📦" title="Orders" desc="Sab orders dekhein aur manage karein" />
-          <NavCard href={`/dashboard/conversations?biz=${bizId}`} icon="💬" title="Conversations" desc="Live chats dekhein — AI + human" />
-          <NavCard href={`/dashboard/products?biz=${bizId}`} icon="🏷️" title="Products" desc="Catalog add/edit karein" />
+          <NavCard href="/dashboard/orders" icon="📦" title="Orders" desc="Sab orders dekhein aur manage karein" />
+          <NavCard href="/dashboard/conversations" icon="💬" title="Conversations" desc="Live chats dekhein — AI + human" />
+          <NavCard href="/dashboard/products" icon="🏷️" title="Products" desc="Catalog add/edit karein" />
         </div>
+
+        {!business.phone_number_id && (
+          <div className="mt-4">
+            <Link
+              href="/dashboard/whatsapp-setup"
+              className="block bg-yellow-50 border border-yellow-200 rounded-xl p-6 hover:shadow-md transition"
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-3xl">📱</div>
+                <div>
+                  <h3 className="font-semibold mb-1">WhatsApp Connect Karein</h3>
+                  <p className="text-sm text-gray-600">Abhi WhatsApp connect nahi hai. Setup guide follow karein.</p>
+                </div>
+                <div className="ml-auto text-green-600 font-medium text-sm">Setup →</div>
+              </div>
+            </Link>
+          </div>
+        )}
 
         <div className="mt-8">
           <h3 className="font-semibold text-lg mb-4">Recent Orders</h3>

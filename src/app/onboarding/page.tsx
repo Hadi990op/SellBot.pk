@@ -57,8 +57,8 @@ export default function OnboardingPage() {
       if (!res.ok) throw new Error('Onboarding failed')
       const data = await res.json()
 
-      // Redirect to dashboard
-      router.push(`/dashboard?biz=${data.business_id}`)
+      // Redirect to dashboard (cookie is set automatically by API)
+      router.push(`/dashboard`)
     } catch (e: any) {
       setError(e?.message || 'Kuch galat ho gaya')
     } finally {
@@ -215,13 +215,11 @@ export default function OnboardingPage() {
 
               <div className="bg-yellow-50 border border-yellow-100 rounded-xl p-4 text-left">
                 <p className="text-sm text-gray-600">
-                  <strong>Setup Steps (Meta for Developers):</strong>
-                  <br />1. <a href="https://developers.facebook.com/apps" target="_blank" className="text-blue-600 underline">Meta for Developers</a> pe app banayein
-                  <br />2. WhatsApp Business API enable karein
-                  <br />3. Webhook URL set karein: <code className="bg-gray-100 px-1 rounded">https://sellbot-pk.vercel.app/api/webhook</code>
-                  <br />4. Verify token: <code className="bg-gray-100 px-1 rounded">sellbot_verify_2026</code>
+                  <strong>Setup Steps:</strong> Dashboard me jao → "WhatsApp Setup" tab → step-by-step guide. 📱
                 </p>
               </div>
+
+              {error && <p className="text-red-500 text-sm">{error}</p>}
 
               {error && <p className="text-red-500 text-sm">{error}</p>}
 

@@ -1,14 +1,19 @@
 import { sql } from '@/lib/supabase'
+import { getBusinessFromCookies } from '@/lib/auth'
+import { NoAccess, DashboardHeader } from '../_components'
 
-export default async function OrdersPage({ searchParams }: { searchParams: { biz?: string } }) {
-  const bizId = searchParams.biz
-  if (!bizId) return <div>Missing biz param</div>
+export const dynamic = 'force-dynamic'
 
-  const orders = await sql`SELECT * FROM orders WHERE business_id = ${bizId} ORDER BY created_at DESC LIMIT 50`
+export default async function OrdersPage() {
+  const business = await getBusinessFromCookies()
+  if (!business) return <NoAccess />
+
+  const orders = await sql`SELECT * FROM orders WHERE business_id = ${business.id} ORDER BY created_at DESC LIMIT 50`
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
+    <main className="min-h-screen bg-gray-50">
+      <DashboardHeader business={business} />
+      <div className="max-w-6xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-6">📦 Orders</h1>
         {(!orders || (orders as any[]).length === 0) ? (
           <div className="bg-white rounded-xl border border-gray-100 p-12 text-center text-gray-400">

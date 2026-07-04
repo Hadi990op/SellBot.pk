@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
     const rawBody = await req.text()
 
     // Verify signature — skip if no signature header present (local testing)
-    // In production Meta always sends x-hub-signature-256
     const signature = req.headers.get('x-hub-signature-256') || ''
     const appSecret = process.env.WHATSAPP_APP_SECRET || ''
     if (appSecret && signature) {
@@ -56,15 +55,15 @@ export async function POST(req: NextRequest) {
         const businessPhoneNumberId = metadata.phone_number_id || ''
 
         for (const msg of messages) {
+          const customerPhone = msg.from
+          const customerName = change.value?.contacts?.find((c: any) => c.wa_id === customerPhone)?.profile?.name || null
+
           if (msg.type !== 'text') {
-            await sendTextMessage(msg.from, 'Assalam o Alaikum! Hum abhi text messages handle kar sakte hain. Apna sawal text me likhein 🙏', businessPhoneNumberId)
+            await sendTextMessage(customerPhone, 'Assalam o Alaikum! Hum abhi text messages handle kar sakte hain. Apna sawal text me likhein 🙏', businessPhoneNumberId)
             continue
           }
 
-          const customerPhone = msg.from
           const customerText = msg.text?.body || ''
-          const customerName = change.value?.contacts?.find((c: any) => c.wa_id === customerPhone)?.profile?.name || null
-
           console.log(`[Webhook] Message from ${customerPhone}: ${customerText.substring(0, 50)}...`)
 
           // Find business by phone_number_id
@@ -73,6 +72,12 @@ export async function POST(req: NextRequest) {
 
           if (!business) {
             console.error('[Webhook] No business found for phone_number_id:', businessPhoneNumberId)
+            continue
+          }
+
+          // Check trial expiry
+          if (business.trial_ends_at && new Date(business.trial_ends_at) < new Date() && business.plan === 'trial') {
+            await sendTextMessage(customerPhone, 'Aapka free trial khatam ho gaya hai. Owner se contact karein. 🙏', businessPhoneNumberId)
             continue
           }
 
@@ -91,15 +96,58 @@ export async function POST(req: NextRequest) {
               RETURNING *
             `
             conversation = (newConvs as any[])[0]
+          } else {
+            // Reactivate if was abandoned
+            if (conversation.status === 'abandoned') {
+              await sql`UPDATE conversations SET status = 'active' WHERE id = ${conversation.id}`
+              conversation.status = 'active'
+            }
           }
 
           if (!conversation) continue
 
-          // Store customer message
+          // Store customer message + update last_message_at
           await sql`
             INSERT INTO messages (conversation_id, role, content)
             VALUES (${conversation.id}, 'customer', ${customerText})
           `
+          await sql`UPDATE conversations SET last_message_at = now() WHERE id = ${conversation.id}`
+
+          // Update customer name if we got it
+          if (customerName && !conversation.customer_name) {
+            await sql`UPDATE conversations SET customer_name = ${customerName} WHERE id = ${conversation.id}`
+          }
+
+          // COD verification: check if customer is confirming a pending order
+          const confirmTriggers = ['yes', 'haan', 'confirm', 'kar do', 'kar de', 'ok', 'theek hai', 'set hai', 'confirm hai']
+          if (confirmTriggers.some((t) => customerText.toLowerCase().trim().includes(t))) {
+            const pendingOrder = await sql`
+              SELECT * FROM orders
+              WHERE conversation_id = ${conversation.id} AND cod_verified = false AND status = 'pending'
+              ORDER BY created_at DESC LIMIT 1
+            `
+            const order = (pendingOrder as any[])[0]
+            if (order) {
+              await sql`UPDATE orders SET cod_verified = true, status = 'confirmed' WHERE id = ${order.id}`
+              await sql`UPDATE conversations SET status = 'order_placed' WHERE id = ${conversation.id}`
+
+              const itemsSummary = Array.isArray(order.items)
+                ? order.items.map((it: any) => `${it.qty}x ${it.name}${it.size ? ` (${it.size})` : ''}`).join(', ')
+                : 'items'
+
+              const confirmMsg = `✅ Order Confirmed!\n\n📦 ${itemsSummary}\n💰 Total: PKR ${Number(order.total).toLocaleString()}\n💵 Payment: COD\n\nAapka order ${business.business_name} ko bhej diya gaya hai. Owner thodi der me dispatch details bhejenge. Shukriya! 🌟`
+              await sendTextMessage(customerPhone, confirmMsg, businessPhoneNumberId)
+              await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${conversation.id}, 'agent', ${confirmMsg})`
+
+              // Notify owner
+              if (business.whatsapp_number && businessPhoneNumberId) {
+                const ownerPhone = business.whatsapp_number.replace(/\D/g, '')
+                const ownerMsg = `🔔 Naya Order!\n\nCustomer: ${customerName || customerPhone}\n📦 ${itemsSummary}\n💰 PKR ${Number(order.total).toLocaleString()}\n💵 COD Verified ✅\n\nOrder ID: ${order.id}`
+                await sendTextMessage(ownerPhone, ownerMsg, businessPhoneNumberId)
+              }
+              continue
+            }
+          }
 
           // Fetch conversation history (last 10 messages)
           const history = await sql`
@@ -138,21 +186,13 @@ export async function POST(req: NextRequest) {
           if (!aiReply) {
             const fallbackReply = 'Assalam o Alaikum! Aapka message mil gaya. Owner thodi der me reply karenge. 🙏'
             await sendTextMessage(customerPhone, fallbackReply, businessPhoneNumberId)
-            await sql`
-              INSERT INTO messages (conversation_id, role, content)
-              VALUES (${conversation.id}, 'agent', ${fallbackReply})
-            `
+            await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${conversation.id}, 'agent', ${fallbackReply})`
             continue
           }
 
           // Send AI reply
           await sendTextMessage(customerPhone, aiReply, businessPhoneNumberId)
-
-          // Store agent message
-          await sql`
-            INSERT INTO messages (conversation_id, role, content)
-            VALUES (${conversation.id}, 'agent', ${aiReply})
-          `
+          await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${conversation.id}, 'agent', ${aiReply})`
 
           // Try to extract order from conversation (after 3+ messages)
           if (chatMessages.length >= 3) {
@@ -172,11 +212,16 @@ export async function POST(req: NextRequest) {
 
               await sql`UPDATE conversations SET status = 'order_placed' WHERE id = ${conversation.id}`
               console.log(`[Webhook] Order extracted: PKR ${orderData.total} from ${customerPhone}`)
+
+              // Send COD verification request to customer
+              const verifyMsg = `📦 Aapka order ready hai!\n\n${orderData.items.map((it: any) => `• ${it.qty}x ${it.name}${it.size ? ` (${it.size})` : ''} — PKR ${(it.qty * it.price).toLocaleString()}`).join('\n')}\n\n💰 Total: PKR ${orderData.total.toLocaleString()}\n💵 Payment: Cash on Delivery\n\nOrder confirm karne ke liye "YES" reply karein. 24 ghante me reply na aane pe order cancel ho jayega.`
+              await sendTextMessage(customerPhone, verifyMsg, businessPhoneNumberId)
+              await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${conversation.id}, 'agent', ${verifyMsg})`
             }
           }
 
-          // Abandoned inquiry detection
-          const abandonTriggers = ['soch', 'bata', 'think', 'later', 'baad', 'confirm nahi']
+          // Abandoned inquiry detection (lighter triggers — only mark, don't follow up yet)
+          const abandonTriggers = ['soch', 'bata deta', 'think', 'later', 'baad me', 'confirm nahi']
           if (abandonTriggers.some((t) => customerText.toLowerCase().includes(t))) {
             await sql`UPDATE conversations SET status = 'abandoned' WHERE id = ${conversation.id}`
             console.log(`[Webhook] Conversation marked abandoned for follow-up`)

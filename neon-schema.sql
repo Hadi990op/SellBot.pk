@@ -12,6 +12,8 @@ create table if not exists businesses (
   industry text default 'general',
   owner_name text not null,
   phone_number_id text,
+  access_token text unique,
+  trial_ends_at timestamptz,
   created_at timestamptz default now(),
   plan text default 'trial'
 );
@@ -25,6 +27,7 @@ create table if not exists products (
   description text default '',
   image_url text,
   sizes text[],
+  sku text,
   in_stock boolean default true,
   created_at timestamptz default now()
 );
@@ -36,6 +39,8 @@ create table if not exists conversations (
   customer_phone text not null,
   customer_name text,
   status text default 'active',
+  last_message_at timestamptz default now(),
+  last_followup_at timestamptz,
   created_at timestamptz default now()
 );
 
@@ -66,6 +71,8 @@ create table if not exists orders (
 -- Indexes for performance
 create index if not exists idx_conversations_business on conversations(business_id);
 create index if not exists idx_conversations_customer on conversations(customer_phone);
+create index if not exists idx_conversations_status on conversations(status);
 create index if not exists idx_messages_conversation on messages(conversation_id);
 create index if not exists idx_orders_business on orders(business_id);
 create index if not exists idx_products_business on products(business_id);
+create index if not exists idx_businesses_access_token on businesses(access_token);

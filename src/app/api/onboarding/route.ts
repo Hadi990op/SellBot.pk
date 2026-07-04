@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sql } from '@/lib/supabase'
+import { generateAccessToken, authCookieHeader } from '@/lib/auth'
 
 /**
- * Onboarding API — creates business + products
+ * Onboarding API — creates business + products, sets auth cookie
  */
 export async function POST(req: NextRequest) {
   try {
@@ -13,10 +14,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Create business
+    const accessToken = generateAccessToken()
+
+    // Create business with access token + 14-day trial
     const bizResult = await sql`
-      INSERT INTO businesses (business_name, owner_name, whatsapp_number, industry, plan)
-      VALUES (${business_name}, ${owner_name}, ${whatsapp_number}, ${industry || 'general'}, 'trial')
+      INSERT INTO businesses (business_name, owner_name, whatsapp_number, industry, plan, access_token, trial_ends_at)
+      VALUES (${business_name}, ${owner_name}, ${whatsapp_number}, ${industry || 'general'}, 'trial', ${accessToken}, now() + interval '14 days')
       RETURNING *
     `
     const business = (bizResult as any[])[0]
@@ -38,7 +41,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ business_id: business.id, status: 'ok' })
+    const res = NextResponse.json({ business_id: business.id, access_token: accessToken, status: 'ok' })
+    res.headers.set('Set-Cookie', authCookieHeader(accessToken))
+    return res
   } catch (e: any) {
     console.error('[Onboarding] Error:', e?.message || e)
     return NextResponse.json({ error: 'internal error' }, { status: 500 })
