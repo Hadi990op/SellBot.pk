@@ -1,40 +1,43 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+/**
+ * Neon Postgres — free serverless database
+ * Uses postgres.js driver (lightweight, no Supabase dependency)
+ *
+ * Connection: postgresql://user:pass@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
+ * Env var: DATABASE_URL
+ */
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+import postgres from 'postgres'
 
-// Lazy initialization — prevents build-time crash when env vars are missing
-let _client: SupabaseClient | null = null
-let _admin: SupabaseClient | null = null
+const connectionString = process.env.DATABASE_URL || ''
+const isConfigured = connectionString.length > 0
 
-function getClient(): SupabaseClient {
-  if (!_client) {
-    _client = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder')
+// Lazy singleton — prevents build-time crash when DATABASE_URL is missing
+let _sql: ReturnType<typeof postgres> | null = null
+
+function getSql(): ReturnType<typeof postgres> {
+  if (!_sql) {
+    _sql = postgres(connectionString || 'postgresql://placeholder:placeholder@localhost:5432/placeholder', {
+      ssl: 'require',
+      max: 5,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    })
   }
-  return _client
+  return _sql
 }
 
-function getAdmin(): SupabaseClient {
-  if (!_admin) {
-    _admin = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseServiceKey || 'placeholder')
-  }
-  return _admin
-}
-
-// Use as getter to avoid build-time initialization
-export const supabase = new Proxy({} as SupabaseClient, {
+// Proxy so we can do: sql`SELECT ...` or sql.query(...)
+// Falls back gracefully when DB not configured
+export const sql = new Proxy({} as ReturnType<typeof postgres>, {
   get(_, prop) {
-    return Reflect.get(getClient(), prop)
+    return Reflect.get(getSql(), prop)
+  },
+  apply(_target, _thisArg, args) {
+    return Reflect.apply(getSql() as any, undefined, args as any)
   },
 })
 
-export const supabaseAdmin = new Proxy({} as SupabaseClient, {
-  get(_, prop) {
-    return Reflect.get(getAdmin(), prop)
-  },
-})
-
+// Types (same as before)
 export type Business = {
   id: string
   whatsapp_number: string
@@ -43,7 +46,7 @@ export type Business = {
   owner_name: string
   created_at: string
   plan: 'trial' | 'starter' | 'growth' | 'pro'
-  phone_number_id?: string
+  phone_number_id?: string | null
 }
 
 export type Product = {
@@ -76,7 +79,7 @@ export type Message = {
 
 export type Order = {
   id: string
-  conversation_id: string
+  conversation_id: string | null
   business_id: string
   items: { product_id: string; name: string; qty: number; size?: string; price: number }[]
   total: number

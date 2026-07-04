@@ -1,22 +1,16 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { sql } from '@/lib/supabase'
 
 export default async function OrdersPage({ searchParams }: { searchParams: { biz?: string } }) {
   const bizId = searchParams.biz
   if (!bizId) return <div>Missing biz param</div>
 
-  const { data: orders } = await supabaseAdmin
-    .from('orders')
-    .select('*')
-    .eq('business_id', bizId)
-    .order('created_at', { ascending: false })
-    .limit(50)
+  const orders = await sql`SELECT * FROM orders WHERE business_id = ${bizId} ORDER BY created_at DESC LIMIT 50`
 
   return (
     <main className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">📦 Orders</h1>
-
-        {!orders || orders.length === 0 ? (
+        {(!orders || (orders as any[]).length === 0) ? (
           <div className="bg-white rounded-xl border border-gray-100 p-12 text-center text-gray-400">
             Abhi koi order nahi. Jab customer WhatsApp pe order karega, yahan dikh jayega.
           </div>
@@ -35,11 +29,11 @@ export default async function OrdersPage({ searchParams }: { searchParams: { biz
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {orders.map((o: any) => (
+                {(orders as any[]).map((o: any) => (
                   <tr key={o.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-xs text-gray-500">{new Date(o.created_at).toLocaleDateString('ur-PK')}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500">{new Date(o.created_at).toLocaleDateString('en-PK')}</td>
                     <td className="px-4 py-3">{o.customer_phone}</td>
-                    <td className="px-4 py-3">{o.items?.length || 0} items</td>
+                    <td className="px-4 py-3">{Array.isArray(o.items) ? o.items.length : 0} items</td>
                     <td className="px-4 py-3 text-right font-medium">PKR {Number(o.total).toLocaleString()}</td>
                     <td className="px-4 py-3 uppercase text-xs">{o.payment_method}</td>
                     <td className="px-4 py-3">{o.cod_verified ? '✅' : '⏳'}</td>

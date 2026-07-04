@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { sql } from '@/lib/supabase'
 
 /**
  * Onboarding API — creates business + products
@@ -14,37 +14,27 @@ export async function POST(req: NextRequest) {
     }
 
     // Create business
-    const { data: business, error: bizError } = await supabaseAdmin
-      .from('businesses')
-      .insert({
-        business_name,
-        owner_name,
-        whatsapp_number,
-        industry: industry || 'general',
-        plan: 'trial',
-      })
-      .select()
-      .single()
+    const bizResult = await sql`
+      INSERT INTO businesses (business_name, owner_name, whatsapp_number, industry, plan)
+      VALUES (${business_name}, ${owner_name}, ${whatsapp_number}, ${industry || 'general'}, 'trial')
+      RETURNING *
+    `
+    const business = (bizResult as any[])[0]
 
-    if (bizError || !business) {
-      console.error('[Onboarding] Business creation failed:', bizError)
+    if (!business) {
+      console.error('[Onboarding] Business creation failed')
       return NextResponse.json({ error: 'Business creation failed' }, { status: 500 })
     }
 
     // Create products
     if (products && products.length > 0) {
-      const productRows = products.map((p: any) => ({
-        business_id: business.id,
-        name: p.name,
-        price: p.price,
-        description: p.description || '',
-        sizes: p.sizes || null,
-        in_stock: p.in_stock !== false,
-      }))
-
-      const { error: prodError } = await supabaseAdmin.from('products').insert(productRows)
-      if (prodError) {
-        console.error('[Onboarding] Product creation failed:', prodError)
+      for (const p of products) {
+        const sizes = p.sizes || null
+        const desc = p.description || ''
+        await sql`
+          INSERT INTO products (business_id, name, price, description, sizes, in_stock)
+          VALUES (${business.id}, ${p.name}, ${p.price}, ${desc}, ${sizes}, ${p.in_stock !== false})
+        `
       }
     }
 

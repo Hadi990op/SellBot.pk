@@ -1,8 +1,7 @@
 /**
  * AI Agent — Roman-Urdu-native sales agent with provider failover.
- * Primary: Google Gemini (free tier, 15 RPM)
- * Fallback 1: Groq Llama 3.3 70B (free, 30 RPM, fast)
- * Fallback 2: OpenRouter free models (50 RPD)
+ * Primary: Groq Llama 3.3 70B (free, fast, 30 RPM)
+ * Fallback: OpenRouter free models (50 RPD)
  *
  * Uses OpenAI SDK with baseURL swap for all providers.
  */
@@ -18,12 +17,6 @@ type Provider = {
 
 function getProviders(): Provider[] {
   return [
-    {
-      name: 'Gemini',
-      baseURL: 'https://generativelanguage.googleapis.com/v1beta/openai/',
-      apiKey: process.env.GEMINI_API_KEY || '',
-      model: 'gemini-2.0-flash',
-    },
     {
       name: 'Groq',
       baseURL: 'https://api.groq.com/openai/v1',

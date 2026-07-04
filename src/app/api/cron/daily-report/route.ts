@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { sql } from '@/lib/supabase'
 import { sendTextMessage } from '@/lib/whatsapp'
 
 /**
  * Daily Revenue Report — runs via Vercel Cron at 9 AM PKT (4:00 UTC)
  * Sends each business owner a WhatsApp summary of yesterday's activity.
- *
- * Vercel cron config in vercel.json:
- * { "crons": [{ "path": "/api/cron/daily-report", "schedule": "0 4 * * *" }] }
- *
- * Protected by CRON_SECRET — Vercel sends it as Authorization: Bearer <secret>
  */
 
 export async function GET(req: NextRequest) {
-  // Verify cron secret
   const auth = req.headers.get('authorization') || ''
   const secret = process.env.CRON_SECRET || ''
   if (secret && auth !== `Bearer ${secret}`) {
@@ -22,12 +16,9 @@ export async function GET(req: NextRequest) {
 
   try {
     // Get all active businesses
-    const { data: businesses } = await supabaseAdmin
-      .from('businesses')
-      .select('*')
-      .neq('plan', 'cancelled')
+    const businesses = await sql`SELECT * FROM businesses WHERE plan != 'cancelled'`
 
-    if (!businesses || businesses.length === 0) {
+    if (!businesses || (businesses as any[]).length === 0) {
       return NextResponse.json({ status: 'no businesses' })
     }
 
@@ -40,30 +31,30 @@ export async function GET(req: NextRequest) {
 
     let reportsSent = 0
 
-    for (const biz of businesses) {
-      // Get yesterday's conversations
-      const { data: conversations } = await supabaseAdmin
-        .from('conversations')
-        .select('*')
-        .eq('business_id', biz.id)
-        .gte('created_at', yesterdayStart.toISOString())
-        .lt('created_at', yesterdayEnd.toISOString())
+    for (const biz of businesses as any[]) {
+      const conversations = await sql`
+        SELECT * FROM conversations
+        WHERE business_id = ${biz.id}
+        AND created_at >= ${yesterdayStart.toISOString()}::timestamptz
+        AND created_at < ${yesterdayEnd.toISOString()}::timestamptz
+      `
 
-      // Get yesterday's orders
-      const { data: orders } = await supabaseAdmin
-        .from('orders')
-        .select('*')
-        .eq('business_id', biz.id)
-        .gte('created_at', yesterdayStart.toISOString())
-        .lt('created_at', yesterdayEnd.toISOString())
+      const orders = await sql`
+        SELECT * FROM orders
+        WHERE business_id = ${biz.id}
+        AND created_at >= ${yesterdayStart.toISOString()}::timestamptz
+        AND created_at < ${yesterdayEnd.toISOString()}::timestamptz
+      `
 
-      const totalInquiries = conversations?.length || 0
-      const totalOrders = orders?.length || 0
-      const codVerified = orders?.filter((o: any) => o.cod_verified).length || 0
-      const totalRevenue = orders?.reduce((sum: number, o: any) => sum + Number(o.total), 0) || 0
-      const abandonedCount = conversations?.filter((c: any) => c.status === 'abandoned').length || 0
+      const convArr = conversations as any[]
+      const ordArr = orders as any[]
 
-      // Build report message
+      const totalInquiries = convArr.length
+      const totalOrders = ordArr.length
+      const codVerified = ordArr.filter((o) => o.cod_verified).length
+      const totalRevenue = ordArr.reduce((sum, o) => sum + Number(o.total), 0)
+      const abandonedCount = convArr.filter((c) => c.status === 'abandoned').length
+
       const report = `🌅 ${biz.business_name} — Daily Report
 
 📊 Kal ki activity:
@@ -79,7 +70,6 @@ ${totalRevenue > 0 ? '🎉 Mubarak! Aap so rahe the, SellBot ne kaam kiya.' : ''
 
 — SellBot.pk 🤖`
 
-      // Send to owner's WhatsApp number (the business WhatsApp number)
       const ownerPhone = biz.whatsapp_number?.replace(/\D/g, '')
       if (ownerPhone && biz.phone_number_id) {
         await sendTextMessage(ownerPhone, report, biz.phone_number_id)

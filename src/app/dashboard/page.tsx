@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { sql } from '@/lib/supabase'
 
 export default async function DashboardPage({ searchParams }: { searchParams: { biz?: string } }) {
   const bizId = searchParams.biz
@@ -14,14 +15,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
     )
   }
 
-  // Fetch business + stats
-  const { supabaseAdmin } = await import('@/lib/supabase')
-
-  const { data: business } = await supabaseAdmin
-    .from('businesses')
-    .select('*')
-    .eq('id', bizId)
-    .single()
+  // Fetch business
+  const bizResult = await sql`SELECT * FROM businesses WHERE id = ${bizId} LIMIT 1`
+  const business = (bizResult as any[])[0]
 
   if (!business) {
     return (
@@ -34,33 +30,28 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   // Today's stats
   const today = new Date()
   today.setHours(0, 0, 0, 0)
+  const todayISO = today.toISOString()
 
-  const { data: todayConversations } = await supabaseAdmin
-    .from('conversations')
-    .select('*')
-    .eq('business_id', bizId)
-    .gte('created_at', today.toISOString())
+  const todayConvs = await sql`
+    SELECT * FROM conversations WHERE business_id = ${bizId} AND created_at >= ${todayISO}::timestamptz
+  `
+  const todayOrders = await sql`
+    SELECT * FROM orders WHERE business_id = ${bizId} AND created_at >= ${todayISO}::timestamptz
+  `
+  const productCount = await sql`SELECT count(*) as cnt FROM products WHERE business_id = ${bizId}`
 
-  const { data: todayOrders } = await supabaseAdmin
-    .from('orders')
-    .select('*')
-    .eq('business_id', bizId)
-    .gte('created_at', today.toISOString())
+  const convArr = todayConvs as any[]
+  const ordArr = todayOrders as any[]
 
-  const { count: totalProducts } = await supabaseAdmin
-    .from('products')
-    .select('*', { count: 'exact', head: true })
-    .eq('business_id', bizId)
-
-  const inquiries = todayConversations?.length || 0
-  const orders = todayOrders?.length || 0
-  const codVerified = todayOrders?.filter((o: any) => o.cod_verified).length || 0
-  const revenue = todayOrders?.reduce((sum: number, o: any) => sum + Number(o.total), 0) || 0
-  const abandoned = todayConversations?.filter((c: any) => c.status === 'abandoned').length || 0
+  const inquiries = convArr.length
+  const orders = ordArr.length
+  const codVerified = ordArr.filter((o) => o.cod_verified).length
+  const revenue = ordArr.reduce((sum, o) => sum + Number(o.total), 0)
+  const abandoned = convArr.filter((c) => c.status === 'abandoned').length
+  const totalProducts = (productCount as any[])[0]?.cnt || 0
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white border-b border-gray-100 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -70,21 +61,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
               <p className="text-xs text-gray-400">SellBot Dashboard</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
-              {business.plan === 'trial' ? '14 Din Free Trial' : business.plan.toUpperCase()}
-            </span>
-          </div>
+          <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
+            {business.plan === 'trial' ? '14 Din Free Trial' : business.plan.toUpperCase()}
+          </span>
         </div>
       </header>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Today's Summary */}
         <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
           <h2 className="text-lg font-medium mb-1">Aaj ki Report 📊</h2>
-          <p className="text-green-100 text-sm mb-6">{
-            new Date().toLocaleDateString('ur-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-          }</p>
+          <p className="text-green-100 text-sm mb-6">{new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Stat label="Inquiries" value={inquiries} icon="💬" />
             <Stat label="Orders" value={orders} icon="📦" />
@@ -93,24 +79,21 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
           </div>
         </div>
 
-        {/* Quick Stats Row */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
           <QuickCard title="Abandoned Inquiries" value={abandoned} subtitle="Follow-up needed" color="yellow" />
-          <QuickCard title="Total Products" value={totalProducts || 0} subtitle="In catalog" color="blue" />
+          <QuickCard title="Total Products" value={totalProducts} subtitle="In catalog" color="blue" />
           <QuickCard title="Plan" value={business.plan} subtitle={business.plan === 'trial' ? 'Upgrade to keep' : 'Active'} color="green" />
         </div>
 
-        {/* Navigation Cards */}
         <div className="grid md:grid-cols-3 gap-4">
           <NavCard href={`/dashboard/orders?biz=${bizId}`} icon="📦" title="Orders" desc="Sab orders dekhein aur manage karein" />
           <NavCard href={`/dashboard/conversations?biz=${bizId}`} icon="💬" title="Conversations" desc="Live chats dekhein — AI + human" />
           <NavCard href={`/dashboard/products?biz=${bizId}`} icon="🏷️" title="Products" desc="Catalog add/edit karein" />
         </div>
 
-        {/* Recent Orders */}
         <div className="mt-8">
           <h3 className="font-semibold text-lg mb-4">Recent Orders</h3>
-          {todayOrders && todayOrders.length > 0 ? (
+          {ordArr.length > 0 ? (
             <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
@@ -123,10 +106,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {todayOrders.map((o: any) => (
+                  {ordArr.map((o: any) => (
                     <tr key={o.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3">{o.customer_phone}</td>
-                      <td className="px-4 py-3">{o.items?.length || 0} items</td>
+                      <td className="px-4 py-3">{Array.isArray(o.items) ? o.items.length : 0} items</td>
                       <td className="px-4 py-3 text-right font-medium">PKR {Number(o.total).toLocaleString()}</td>
                       <td className="px-4 py-3 uppercase text-xs">{o.payment_method}</td>
                       <td className="px-4 py-3">

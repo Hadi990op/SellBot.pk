@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
+import { sql } from '@/lib/supabase'
 import { generateReply, buildSystemPrompt, extractOrder, type ChatMessage } from '@/lib/ai-agent'
 import { sendTextMessage } from '@/lib/whatsapp'
 
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text()
 
-    // Verify signature
+    // Verify signature (optional — only if app secret configured)
     const signature = req.headers.get('x-hub-signature-256') || ''
     const appSecret = process.env.WHATSAPP_APP_SECRET || ''
     if (appSecret) {
@@ -44,22 +44,19 @@ export async function POST(req: NextRequest) {
 
     const body = JSON.parse(rawBody)
 
-    // Meta webhook structure
     if (body.object !== 'whatsapp_business_account') {
       return NextResponse.json({ status: 'ignored' })
     }
 
-    // Process each entry
     for (const entry of body.entry || []) {
       for (const change of entry.changes || []) {
         const messages = change.value?.messages || []
         const metadata = change.value?.metadata || {}
-        const businessPhoneNumber = metadata.phone_number_id || ''
+        const businessPhoneNumberId = metadata.phone_number_id || ''
 
         for (const msg of messages) {
           if (msg.type !== 'text') {
-            // Non-text message — reply with helpful message
-            await sendTextMessage(msg.from, 'Assalam o Alaikum! Hum abhi text messages handle kar sakte hain. Apna sawal text me likhein 🙏', businessPhoneNumber)
+            await sendTextMessage(msg.from, 'Assalam o Alaikum! Hum abhi text messages handle kar sakte hain. Apna sawal text me likhein 🙏', businessPhoneNumberId)
             continue
           }
 
@@ -69,60 +66,48 @@ export async function POST(req: NextRequest) {
 
           console.log(`[Webhook] Message from ${customerPhone}: ${customerText.substring(0, 50)}...`)
 
-          // Find business by phone number ID
-          const { data: business } = await supabaseAdmin
-            .from('businesses')
-            .select('*')
-            .eq('phone_number_id', businessPhoneNumber)
-            .single()
+          // Find business by phone_number_id
+          const businesses = await sql`SELECT * FROM businesses WHERE phone_number_id = ${businessPhoneNumberId} LIMIT 1`
+          const business = (businesses as any[])[0]
 
           if (!business) {
-            console.error('[Webhook] No business found for phone_number_id:', businessPhoneNumber)
+            console.error('[Webhook] No business found for phone_number_id:', businessPhoneNumberId)
             continue
           }
 
           // Find or create conversation
-          let { data: conversation } = await supabaseAdmin
-            .from('conversations')
-            .select('*')
-            .eq('business_id', business.id)
-            .eq('customer_phone', customerPhone)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single()
+          let conversations = await sql`
+            SELECT * FROM conversations
+            WHERE business_id = ${business.id} AND customer_phone = ${customerPhone}
+            ORDER BY created_at DESC LIMIT 1
+          `
+          let conversation = (conversations as any[])[0]
 
           if (!conversation) {
-            const { data: newConv } = await supabaseAdmin
-              .from('conversations')
-              .insert({
-                business_id: business.id,
-                customer_phone: customerPhone,
-                customer_name: customerName,
-                status: 'active',
-              })
-              .select()
-              .single()
-            conversation = newConv
+            const newConvs = await sql`
+              INSERT INTO conversations (business_id, customer_phone, customer_name, status)
+              VALUES (${business.id}, ${customerPhone}, ${customerName}, 'active')
+              RETURNING *
+            `
+            conversation = (newConvs as any[])[0]
           }
 
           if (!conversation) continue
 
           // Store customer message
-          await supabaseAdmin.from('messages').insert({
-            conversation_id: conversation.id,
-            role: 'customer',
-            content: customerText,
-          })
+          await sql`
+            INSERT INTO messages (conversation_id, role, content)
+            VALUES (${conversation.id}, 'customer', ${customerText})
+          `
 
           // Fetch conversation history (last 10 messages)
-          const { data: history } = await supabaseAdmin
-            .from('messages')
-            .select('role, content')
-            .eq('conversation_id', conversation.id)
-            .order('created_at', { ascending: false })
-            .limit(10)
+          const history = await sql`
+            SELECT role, content FROM messages
+            WHERE conversation_id = ${conversation.id}
+            ORDER BY created_at DESC LIMIT 10
+          `
 
-          const chatMessages: ChatMessage[] = (history || [])
+          const chatMessages: ChatMessage[] = (history as any[])
             .reverse()
             .map((m: any) => ({
               role: m.role === 'customer' ? 'user' : 'assistant',
@@ -130,20 +115,17 @@ export async function POST(req: NextRequest) {
             }))
 
           // Fetch products for context
-          const { data: products } = await supabaseAdmin
-            .from('products')
-            .select('*')
-            .eq('business_id', business.id)
+          const products = await sql`SELECT * FROM products WHERE business_id = ${business.id}`
 
-          // Build system prompt with business context
+          // Build system prompt
           const systemPrompt = buildSystemPrompt({
             business_name: business.business_name,
             industry: business.industry,
             owner_name: business.owner_name,
-            products: (products || []).map((p: any) => ({
+            products: (products as any[]).map((p: any) => ({
               name: p.name,
-              price: p.price,
-              description: p.description,
+              price: Number(p.price),
+              description: p.description || '',
               sizes: p.sizes,
               in_stock: p.in_stock,
             })),
@@ -153,66 +135,49 @@ export async function POST(req: NextRequest) {
           const aiReply = await generateReply(chatMessages, systemPrompt)
 
           if (!aiReply) {
-            // Fallback — don't leave customer hanging
             const fallbackReply = 'Assalam o Alaikum! Aapka message mil gaya. Owner thodi der me reply karenge. 🙏'
-            await sendTextMessage(customerPhone, fallbackReply, businessPhoneNumber)
-            await supabaseAdmin.from('messages').insert({
-              conversation_id: conversation.id,
-              role: 'agent',
-              content: fallbackReply,
-            })
+            await sendTextMessage(customerPhone, fallbackReply, businessPhoneNumberId)
+            await sql`
+              INSERT INTO messages (conversation_id, role, content)
+              VALUES (${conversation.id}, 'agent', ${fallbackReply})
+            `
             continue
           }
 
           // Send AI reply
-          await sendTextMessage(customerPhone, aiReply, businessPhoneNumber)
+          await sendTextMessage(customerPhone, aiReply, businessPhoneNumberId)
 
           // Store agent message
-          await supabaseAdmin.from('messages').insert({
-            conversation_id: conversation.id,
-            role: 'agent',
-            content: aiReply,
-          })
+          await sql`
+            INSERT INTO messages (conversation_id, role, content)
+            VALUES (${conversation.id}, 'agent', ${aiReply})
+          `
 
-          // Try to extract order from conversation
+          // Try to extract order from conversation (after 3+ messages)
           if (chatMessages.length >= 3) {
             const orderData = await extractOrder(
               [...chatMessages, { role: 'assistant', content: aiReply }],
-              (products || []).map((p: any) => ({ id: p.id, name: p.name, price: p.price }))
+              (products as any[]).map((p: any) => ({ id: p.id, name: p.name, price: Number(p.price) }))
             )
 
             if (orderData && orderData.items?.length > 0) {
-              // Store order
-              await supabaseAdmin.from('orders').insert({
-                conversation_id: conversation.id,
-                business_id: business.id,
-                items: orderData.items,
-                total: orderData.total,
-                customer_phone: customerPhone,
-                customer_address: orderData.customer_address || null,
-                payment_method: 'cod',
-                cod_verified: false,
-                status: 'pending',
-              })
+              const itemsJson = JSON.stringify(orderData.items)
+              const address = orderData.customer_address || null
 
-              // Update conversation status
-              await supabaseAdmin
-                .from('conversations')
-                .update({ status: 'order_placed' })
-                .eq('id', conversation.id)
+              await sql`
+                INSERT INTO orders (conversation_id, business_id, items, total, customer_phone, customer_address, payment_method, cod_verified, status)
+                VALUES (${conversation.id}, ${business.id}, ${itemsJson}::jsonb, ${orderData.total}, ${customerPhone}, ${address}, 'cod', false, 'pending')
+              `
 
+              await sql`UPDATE conversations SET status = 'order_placed' WHERE id = ${conversation.id}`
               console.log(`[Webhook] Order extracted: PKR ${orderData.total} from ${customerPhone}`)
             }
           }
 
-          // Abandoned inquiry detection → schedule follow-up (simplified: check for "sochta/bataungi/think")
+          // Abandoned inquiry detection
           const abandonTriggers = ['soch', 'bata', 'think', 'later', 'baad', 'confirm nahi']
           if (abandonTriggers.some((t) => customerText.toLowerCase().includes(t))) {
-            // Mark as abandoned for follow-up
-            await supabaseAdmin
-              .from('conversations')
-              .update({ status: 'abandoned' })
-              .eq('id', conversation.id)
+            await sql`UPDATE conversations SET status = 'abandoned' WHERE id = ${conversation.id}`
             console.log(`[Webhook] Conversation marked abandoned for follow-up`)
           }
         }
