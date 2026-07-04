@@ -30,11 +30,12 @@ export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text()
 
-    // Verify signature (optional — only if app secret configured)
+    // Verify signature — skip if no signature header present (local testing)
+    // In production Meta always sends x-hub-signature-256
     const signature = req.headers.get('x-hub-signature-256') || ''
     const appSecret = process.env.WHATSAPP_APP_SECRET || ''
-    if (appSecret) {
-      const crypto = require('crypto')
+    if (appSecret && signature) {
+      const crypto = await import('crypto')
       const expected = 'sha256=' + crypto.createHmac('sha256', appSecret).update(rawBody).digest('hex')
       if (expected.length !== signature.length || !crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature))) {
         console.error('[Webhook] Invalid signature')

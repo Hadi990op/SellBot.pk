@@ -1,22 +1,22 @@
 /**
  * Neon Postgres — free serverless database
- * Uses postgres.js driver (lightweight, no Supabase dependency)
- *
- * Connection: postgresql://user:pass@ep-xxx.region.aws.neon.tech/dbname?sslmode=require
+ * Uses postgres.js driver
  * Env var: DATABASE_URL
  */
 
 import postgres from 'postgres'
 
 const connectionString = process.env.DATABASE_URL || ''
-const isConfigured = connectionString.length > 0
 
-// Lazy singleton — prevents build-time crash when DATABASE_URL is missing
+// Lazy singleton — only create connection when first query runs
 let _sql: ReturnType<typeof postgres> | null = null
 
 function getSql(): ReturnType<typeof postgres> {
   if (!_sql) {
-    _sql = postgres(connectionString || 'postgresql://placeholder:placeholder@localhost:5432/placeholder', {
+    if (!connectionString) {
+      throw new Error('DATABASE_URL not configured')
+    }
+    _sql = postgres(connectionString, {
       ssl: 'require',
       max: 5,
       idle_timeout: 20,
@@ -26,18 +26,28 @@ function getSql(): ReturnType<typeof postgres> {
   return _sql
 }
 
-// Proxy so we can do: sql`SELECT ...` or sql.query(...)
-// Falls back gracefully when DB not configured
-export const sql = new Proxy({} as ReturnType<typeof postgres>, {
+/**
+ * sql tagged template — usage: await sql`SELECT * FROM businesses`
+ * Also supports sql.end() to close connection.
+ *
+ * We export a function that, when called as tagged template, delegates to the real sql instance.
+ */
+function sql(strings: TemplateStringsArray, ...values: any[]): Promise<any[]> {
+  return (getSql() as any)(strings, ...values)
+}
+
+// Attach methods that postgres.js exposes (like .end, .unsafe, etc.)
+;(sql as any).__proto__ = new Proxy({}, {
   get(_, prop) {
-    return Reflect.get(getSql(), prop)
-  },
-  apply(_target, _thisArg, args) {
-    return Reflect.apply(getSql() as any, undefined, args as any)
+    const real = getSql()
+    const val = Reflect.get(real, prop)
+    return typeof val === 'function' ? val.bind(real) : val
   },
 })
 
-// Types (same as before)
+export { sql }
+
+// Types
 export type Business = {
   id: string
   whatsapp_number: string

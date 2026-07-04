@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  basePath: "/sellbot",
+  async redirects() {
+    return []
+  },
 };
 
 export default nextConfig;
