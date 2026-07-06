@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+whatsapp-service/node_modules/
+whatsapp-service/auth_state/
+.next/
+*.env
+.env.local
