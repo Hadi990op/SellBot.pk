@@ -10,7 +10,7 @@ export function MarketingNav() {
             <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#EFF35F] opacity-80 mix-blend-screen" />
           </div>
           <span className="text-lg font-bold tracking-tight text-[#E8EEF7]">
-            SellBot<span className="text-[#508DFF]">.pk</span>
+            SellBot
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm text-[#8B9DB8]">
@@ -44,9 +44,9 @@ export function MarketingFooter() {
                 <div className="absolute inset-0 w-6 h-6 rounded-md bg-[#508DFF] opacity-90" />
                 <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#EFF35F] opacity-80 mix-blend-screen" />
               </div>
-              <span className="text-lg font-bold text-[#E8EEF7]">SellBot<span className="text-[#508DFF]">.pk</span></span>
+              <span className="text-lg font-bold text-[#E8EEF7]">SellBot</span>
             </Link>
-            <p className="text-sm text-[#5A6B82]">Pakistani businesses ke liye banaya gaya. 🇵🇰</p>
+            <p className="text-sm text-[#5A6B82]">Made for growing businesses.</p>
           </div>
           <div>
             <div className="text-xs uppercase tracking-wider text-[#5A6B82] mb-4">Product</div>
@@ -71,12 +71,12 @@ export function MarketingFooter() {
             <div className="space-y-2 text-sm">
               <Link href="/onboarding" className="text-[#508DFF] hover:text-[#6FA3FF] transition block font-medium">Free Trial →</Link>
               <Link href="/dashboard" className="text-[#8B9DB8] hover:text-[#E8EEF7] transition block">Dashboard</Link>
-              <Link href="/dashboard/connect" className="text-[#8B9DB8] hover:text-[#E8EEF7] transition block">Connect WhatsApp</Link>
+              <Link href="/dashboard/connect" className="text-[#8B9DB8] hover:text-[#E8EEF7] transition block">Connect Your Number</Link>
             </div>
           </div>
         </div>
         <div className="border-t border-[#508DFF]/10 pt-6 flex justify-between items-center flex-wrap gap-4">
-          <p className="text-xs text-[#5A6B82]">© 2026 SellBot.pk. All rights reserved. Made in Pakistan 🇵🇰</p>
+          <p className="text-xs text-[#5A6B82]">© 2026 SellBot. All rights reserved.</p>
           <p className="text-xs text-[#5A6B82] font-mono">Trust. Technical Depth. Focus.</p>
         </div>
       </div>

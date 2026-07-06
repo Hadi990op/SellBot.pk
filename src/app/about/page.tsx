@@ -2,8 +2,12 @@ import Link from 'next/link'
 import { MarketingNav, MarketingFooter } from '../marketing'
 
 export const metadata = {
-  title: 'About — SellBot.pk',
-  description: 'SellBot.pk ki kahani — Pakistani WhatsApp businesses ka AI sales agent.',
+  title: 'About — SellBot',
+  description: 'The SellBot story — an AI sales agent for businesses that sell through chat. Never miss a sale again.',
+  openGraph: {
+    title: 'About — SellBot',
+    description: 'The SellBot story — an AI sales agent for businesses that sell through chat. Never miss a sale again.',
+  },
 }
 
 export default function AboutPage() {
@@ -18,11 +22,11 @@ export default function AboutPage() {
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-block text-xs uppercase tracking-widest text-[#508DFF] font-medium mb-4">Our Story</div>
           <h1 className="heading-split text-4xl md:text-6xl mb-6">
-            Pakistani businesses<br />
-            <span className="heading-accent">AI se aage badhenge.</span>
+            Every business<br />
+            <span className="heading-accent">deserves an AI agent.</span>
           </h1>
           <p className="text-lg text-[#8B9DB8] max-w-2xl mx-auto">
-            SellBot.pk Pakistan ke 21 million WhatsApp businesses ke liye banaya gaya — taake koi sale miss na ho, koi customer wait na kare, aur har business owner so bhi sake ke uska AI agent kaam kar raha hai.
+            SellBot was built for businesses that sell through chat — so no sale is missed, no customer is left waiting, and every business owner can rest easy knowing their AI agent is working around the clock.
           </p>
         </div>
       </section>
@@ -33,9 +37,9 @@ export default function AboutPage() {
           <div className="glass rounded-2xl p-10">
             <div className="text-xs uppercase tracking-widest text-[#EFF35F] font-medium mb-4">Mission</div>
             <p className="text-xl md:text-2xl leading-relaxed text-[#E8EEF7]">
-              Pakistan me har business — chhote ya bade — AI ka fayda uthaye, bina tech seekhe.
-              SellBot ek bridge hai: <span className="text-[#508DFF] font-medium">WhatsApp pe AI sales agent</span> jo Roman Urdu me baat karta hai, orders confirm karta hai, aur owner ko revenue report bhejta hai.
-              Sab free se shuru. Sab simple. Sab Pakistani.
+              Every business — small or large — should benefit from AI, without learning any technology.
+              SellBot is a bridge: <span className="text-[#508DFF] font-medium">an AI sales agent on your messaging app</span> that talks to your customers naturally, confirms orders, and sends revenue reports to the owner.
+              Start free. Keep it simple. Built for everyone.
             </p>
           </div>
         </div>
@@ -54,17 +58,17 @@ export default function AboutPage() {
             <ValueCard
               icon="🤝"
               title="Trust"
-              desc="Customer data encrypted. Owner conversations private. Koi third-party sharing nahi. Pakistani businesses ke data Pakistani businesses ka."
+              desc="Customer data is encrypted. Owner conversations stay private. No third-party sharing. Your business data belongs to your business."
             />
             <ValueCard
               icon="🔧"
               title="Technical Depth"
-              desc="Multi-provider AI failover. Neon Postgres. Baileys WhatsApp protocol. Real engineering, real reliability — na ke sirf wrapper."
+              desc="Multi-provider AI failover. Encrypted database. Reliable messaging integration. Real engineering, real reliability — not just a wrapper."
             />
             <ValueCard
               icon="🎯"
               title="Focus"
-              desc="Ek problem, ek solution. WhatsApp pe missed sales = lost revenue. SellBot sirf isi ko solve karta hai — perfectly."
+              desc="One problem, one solution. Missed sales on chat = lost revenue. SellBot solves exactly this — perfectly."
             />
           </div>
         </div>
@@ -74,15 +78,15 @@ export default function AboutPage() {
       <section className="py-16 px-6 bg-[#0F2A47]/20">
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div>
-            <div className="text-4xl font-bold text-[#EFF35F] heading-split">21M+</div>
-            <div className="text-sm text-[#8B9DB8] mt-1">WhatsApp businesses in Pakistan</div>
+            <div className="text-4xl font-bold text-[#EFF35F] heading-split">Millions</div>
+            <div className="text-sm text-[#8B9DB8] mt-1">Businesses miss sales every day</div>
           </div>
           <div>
             <div className="text-4xl font-bold text-[#EFF35F] heading-split">40%</div>
             <div className="text-sm text-[#8B9DB8] mt-1">Revenue lost to ignored leads</div>
           </div>
           <div>
-            <div className="text-4xl font-bold text-[#EFF35F] heading-split">PKR 15K</div>
+            <div className="text-4xl font-bold text-[#EFF35F] heading-split">High</div>
             <div className="text-sm text-[#8B9DB8] mt-1">Average monthly value per business</div>
           </div>
           <div>
@@ -98,36 +102,36 @@ export default function AboutPage() {
           <div className="text-center mb-12">
             <div className="inline-block text-xs uppercase tracking-widest text-[#508DFF] font-medium mb-4">The Problem</div>
             <h2 className="heading-split text-3xl md:text-5xl mb-4">
-              Pakistani businesses har din<br /><span className="heading-accent">paise khote hain.</span>
+              Businesses lose money<br /><span className="heading-accent">every single day.</span>
             </h2>
           </div>
           <div className="space-y-4">
             <div className="glass rounded-xl p-6 flex items-start gap-4">
               <span className="text-2xl">📱</span>
               <div>
-                <h3 className="font-semibold mb-1">21M WhatsApp Business accounts</h3>
-                <p className="text-sm text-[#8B9DB8]">Pakistan me world's highest ratio — har business WhatsApp pe customer chat karta hai. Lekin koi 24/7 reply nahi karta.</p>
+                <h3 className="font-semibold mb-1">Countless chat-based businesses</h3>
+                <p className="text-sm text-[#8B9DB8]">Most businesses handle customers through chat. But almost none reply 24/7 — and customers expect instant responses.</p>
               </div>
             </div>
             <div className="glass rounded-xl p-6 flex items-start gap-4">
               <span className="text-2xl">💤</span>
               <div>
-                <h3 className="font-semibold mb-1">Raat ke 10 baje staff chala jata hai</h3>
-                <p className="text-sm text-[#8B9DB8]">Karachi restaurant 15-20 orders/night lose karta hai. Lahore clothing brand 3-4 ghante manual reply me lagti hai.</p>
+                <h3 className="font-semibold mb-1">No one answers after hours</h3>
+                <p className="text-sm text-[#8B9DB8]">Staff goes home at 10pm. Customers message at 11pm. No reply means lost orders — every single night.</p>
               </div>
             </div>
             <div className="glass rounded-xl p-6 flex items-start gap-4">
               <span className="text-2xl">🤖</span>
               <div>
-                <h3 className="font-semibold mb-1">English AI tools Roman Urdu nahi samajhte</h3>
-                <p className="text-sm text-[#8B9DB8]">ChatGPT, Meta AI — sab English-first. Pakistani customer 'Bhai price kya hai?' likhta hai, AI bhatk jata hai.</p>
+                <h3 className="font-semibold mb-1">Generic AI tools miss the context</h3>
+                <p className="text-sm text-[#8B9DB8]">Most AI tools are built for English first. They misunderstand local phrasing, miss intent, and reply like robots instead of a real person.</p>
               </div>
             </div>
             <div className="glass rounded-xl p-6 flex items-start gap-4">
               <span className="text-2xl">💵</span>
               <div>
-                <h3 className="font-semibold mb-1">30%+ fake COD orders</h3>
-                <p className="text-sm text-[#8B9DB8]">Cash on Delivery pe customer cancel karta hai, courier charges business bear karta hai. PKR 5-15K/mo waste.</p>
+                <h3 className="font-semibold mb-1">30%+ fake cash-on-delivery orders</h3>
+                <p className="text-sm text-[#8B9DB8]">Customers cancel at the door, and the business absorbs courier charges. Thousands wasted every month.</p>
               </div>
             </div>
           </div>
@@ -139,10 +143,10 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-dot-grid opacity-30" />
         <div className="relative max-w-3xl mx-auto text-center">
           <h2 className="heading-split text-3xl md:text-5xl mb-6">
-            Aap bhi <span className="heading-accent"> SellBot family</span> me shamil ho.
+            Join the <span className="heading-accent"> SellBot family</span> today.
           </h2>
           <Link href="/onboarding" className="btn-electric px-8 py-3.5 rounded-xl text-base inline-block">
-            14 Din Free Trial Shuru Karein →
+            Start Your 14-Day Free Trial →
           </Link>
         </div>
       </section>

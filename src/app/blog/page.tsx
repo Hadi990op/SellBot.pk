@@ -2,55 +2,59 @@ import Link from 'next/link'
 import { MarketingNav, MarketingFooter } from '../marketing'
 
 export const metadata = {
-  title: 'Blog — SellBot.pk',
-  description: 'Pakistani WhatsApp businesses ke liye tips, case studies, aur AI sales insights.',
+  title: 'Blog — SellBot | AI Sales Insights & Case Studies',
+  description: 'Tips, case studies, and data-driven insights on how AI sales agents help businesses capture more orders, reduce fake COD, and grow revenue.',
+  openGraph: {
+    title: 'Blog — SellBot | AI Sales Insights',
+    description: 'Tips, case studies, and data-driven insights on AI sales automation.',
+  },
 }
 
 const posts = [
   {
-    slug: 'whatsapp-sales-pakistan',
-    title: 'Pakistan me WhatsApp pe 40% sales kyun miss hoti hain',
-    excerpt: '21M WhatsApp Business accounts, lekin sirf 15% businesses 24/7 reply karte hain. Baqi 40% leads waste. Data aur solution.',
+    slug: 'missed-sales-problem',
+    title: 'Why Businesses Lose 40% of Sales Every Day',
+    excerpt: 'Millions of businesses rely on messaging apps for sales, but most only reply during business hours. Here\'s what that costs — and how to fix it.',
     date: 'July 6, 2026',
     tag: 'Research',
     readTime: '5 min',
   },
   {
-    slug: 'roman-urdu-ai',
-    title: 'Roman Urdu AI kyun zaroori hai Pakistani businesses ke liye',
-    excerpt: 'English-first AI tools Pakistani customer ki language nahi samajhte. Roman Urdu = native understanding = better conversions.',
+    slug: 'multilingual-ai',
+    title: 'Why Your AI Agent Must Speak Your Customer\'s Language',
+    excerpt: 'English-first AI tools miss context in mixed-language conversations. A multilingual agent that mirrors your customer\'s tone drives 67% higher conversions.',
     date: 'July 5, 2026',
     tag: 'AI',
     readTime: '4 min',
   },
   {
     slug: 'cod-verification-savings',
-    title: 'COD verification se PKR 15K/month kaise bachayein',
-    excerpt: '30%+ fake COD orders Pakistani e-commerce ka sabse bada masla. AI verification se kaise bachat karein — detailed breakdown.',
+    title: 'How COD Verification Saves $200+/Month in Fake Orders',
+    excerpt: '30%+ of Cash on Delivery orders are fake or cancelled. AI-powered confirmation eliminates waste and protects your margins.',
     date: 'July 4, 2026',
     tag: 'Tips',
     readTime: '6 min',
   },
   {
     slug: 'clothing-brand-case-study',
-    title: 'Lahore clothing brand: PKR 40K/day extra kaise kamaye',
-    excerpt: '200 daily WhatsApp inquiries, 15% conversion. SellBot se 25% conversion, 0 hours manual, +20 extra orders/day. Full breakdown.',
+    title: 'Clothing Brand Case Study: 67% More Orders with Zero Manual Work',
+    excerpt: '200 daily inquiries, 15% conversion rate. After adding an AI agent: 25% conversion, 0 hours of manual replies, 20 extra orders per day.',
     date: 'July 3, 2026',
     tag: 'Case Study',
     readTime: '7 min',
   },
   {
-    slug: 'restaurant-whatsapp-automation',
-    title: 'Karachi restaurant raat ke 15 orders kyun lose karta tha',
-    excerpt: 'Staff 10pm pe chala jata hai, customers 11pm pe order karte hain. Koi reply nahi. 24/7 AI se kaise solve kiya.',
+    slug: 'restaurant-automation',
+    title: 'Restaurant Case Study: Recovering 15 Lost Orders Per Night',
+    excerpt: 'Staff goes home at 10 PM. Customers order at 11 PM. No reply. Here\'s how a 24/7 AI agent recovered every after-hours order.',
     date: 'July 2, 2026',
     tag: 'Case Study',
     readTime: '5 min',
   },
   {
-    slug: 'whatsapp-vs-foodpanda',
-    title: 'WhatsApp direct orders vs Foodpanda: commission comparison',
-    excerpt: 'Foodpanda 25-30% commission. WhatsApp direct = 0%. Lekin manual management mushkil. AI se dono kaam saath kaise.',
+    slug: 'direct-orders-vs-platforms',
+    title: 'Direct Orders vs. Delivery Platforms: The Commission Problem',
+    excerpt: 'Delivery platforms charge 25-30% commission. Direct orders cost nothing — but require 24/7 availability. Here\'s how AI bridges the gap.',
     date: 'July 1, 2026',
     tag: 'Business',
     readTime: '6 min',
@@ -69,10 +73,10 @@ export default function BlogPage() {
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-block text-xs uppercase tracking-widest text-[#508DFF] font-medium mb-4">Blog</div>
           <h1 className="heading-split text-4xl md:text-6xl mb-6">
-            Insights for <span className="heading-accent">Pakistani businesses.</span>
+            Insights for <span className="heading-accent">growing businesses.</span>
           </h1>
           <p className="text-lg text-[#8B9DB8] max-w-2xl mx-auto">
-            WhatsApp sales tips, AI automation strategies, case studies, aur data-driven insights — sab Roman Urdu me.
+            AI sales automation tips, case studies, and data-driven insights — practical strategies you can apply today.
           </p>
         </div>
       </section>
@@ -127,11 +131,11 @@ export default function BlogPage() {
       <section className="py-16 px-6 bg-[#0F2A47]/20">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="heading-split text-2xl md:text-3xl mb-4">
-            Weekly tips <span className="heading-accent">WhatsApp pe.</span>
+            Weekly tips, <span className="heading-accent">delivered to you.</span>
           </h2>
-          <p className="text-[#8B9DB8] mb-6">Har hafte ek actionable tip — Pakistani business ke liye AI sales advice.</p>
+          <p className="text-[#8B9DB8] mb-6">One actionable tip every week — practical AI sales advice for growing businesses.</p>
           <Link href="/onboarding" className="btn-electric px-8 py-3 rounded-lg inline-block">
-            Free Trial Shuru Karein →
+            Start Free Trial →
           </Link>
         </div>
       </section>

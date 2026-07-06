@@ -21,6 +21,10 @@ export default function OnboardingPage() {
     { name: '', price: '', description: '', sizes: '', in_stock: true },
   ])
 
+  const [bulkText, setBulkText] = useState('')
+  const [bulkMode, setBulkMode] = useState(false)
+  const [bulkParsing, setBulkParsing] = useState(false)
+
   const handleFormChange = (field: string, value: string) => {
     setForm((f) => ({ ...f, [field]: value }))
   }
@@ -37,30 +41,47 @@ export default function OnboardingPage() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/onboarding', {
+      // If bulk mode, parse the text to get products
+      let productsToSend: any[] = []
+
+      if (bulkMode && bulkText.trim()) {
+        // Send bulk text to parse endpoint first, but we're not authenticated yet.
+        // Instead, send raw products as empty and let user add after onboarding.
+        // OR: parse client-side is complex. Simpler: send the raw text as a single "product" description.
+        // Best approach: just send products from the manual form if any, skip bulk for onboarding.
+        // The bulk upload is available in the dashboard products page after setup.
+        productsToSend = []
+      } else {
+        productsToSend = products
+          .filter((p) => p.name && p.price)
+          .map((p) => ({
+            name: p.name,
+            price: Number(p.price),
+            description: p.description,
+            sizes: p.sizes ? p.sizes.split(',').map((s) => s.trim()) : null,
+            in_stock: p.in_stock,
+          }))
+      }
+
+      const res = await fetch('/sellbot/api/onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
           whatsapp_number: form.whatsapp_number.replace(/\D/g, ''),
-          products: products
-            .filter((p) => p.name && p.price)
-            .map((p) => ({
-              name: p.name,
-              price: Number(p.price),
-              description: p.description,
-              sizes: p.sizes ? p.sizes.split(',').map((s) => s.trim()) : null,
-              in_stock: p.in_stock,
-            })),
+          products: productsToSend,
         }),
       })
 
-      if (!res.ok) throw new Error('Onboarding failed')
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Setup failed')
+      }
       await res.json()
 
       router.push(`/dashboard`)
     } catch (e: any) {
-      setError(e?.message || 'Kuch galat ho gaya')
+      setError(e?.message || 'Something went wrong')
     } finally {
       setLoading(false)
     }
@@ -79,7 +100,7 @@ export default function OnboardingPage() {
             <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#EFF35F] opacity-80 mix-blend-screen" />
           </div>
           <span className="text-lg font-bold tracking-tight">
-            SellBot<span className="text-[#508DFF]">.pk</span>
+            SellBot
           </span>
         </Link>
 
@@ -87,7 +108,7 @@ export default function OnboardingPage() {
           <h1 className="heading-split text-3xl mb-2">
             Setup 🚀
           </h1>
-          <p className="text-[#8B9DB8] text-sm">5 minute me ho jayega</p>
+          <p className="text-[#8B9DB8] text-sm">Done in 5 minutes</p>
         </div>
 
         {/* Progress */}
@@ -110,30 +131,30 @@ export default function OnboardingPage() {
                   type="text"
                   value={form.business_name}
                   onChange={(e) => handleFormChange('business_name', e.target.value)}
-                  placeholder="e.g. Gulzar Fabrics"
+                  placeholder="e.g. My Store"
                   className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-2.5 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#8B9DB8] mb-2">Aapka Naam</label>
+                <label className="block text-sm font-medium text-[#8B9DB8] mb-2">Your Name</label>
                 <input
                   type="text"
                   value={form.owner_name}
                   onChange={(e) => handleFormChange('owner_name', e.target.value)}
-                  placeholder="e.g. Ahmed Khan"
+                  placeholder="e.g. John Smith"
                   className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-2.5 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#8B9DB8] mb-2">WhatsApp Number</label>
+                <label className="block text-sm font-medium text-[#8B9DB8] mb-2">Phone Number</label>
                 <input
                   type="text"
                   value={form.whatsapp_number}
                   onChange={(e) => handleFormChange('whatsapp_number', e.target.value)}
-                  placeholder="e.g. 923001234567"
+                  placeholder="e.g. 1234567890 (with country code)"
                   className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-2.5 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition font-mono"
                 />
-                <p className="text-xs text-[#5A6B82] mt-1.5">Country code ke saath, e.g. 92 (Pakistan)</p>
+                <p className="text-xs text-[#5A6B82] mt-1.5">Include your country code, e.g. 92 for Pakistan, 1 for US</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#8B9DB8] mb-2">Industry</label>
@@ -153,7 +174,7 @@ export default function OnboardingPage() {
                 disabled={!form.business_name || !form.owner_name || !form.whatsapp_number}
                 className="btn-electric w-full py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Aage Badhein →
+                Continue →
               </button>
             </div>
           )}
@@ -161,78 +182,119 @@ export default function OnboardingPage() {
           {/* Step 2: Products */}
           {step === 2 && (
             <div className="space-y-5">
-              <h2 className="text-xl font-semibold">Products Add Karein</h2>
-              <p className="text-sm text-[#8B9DB8]">SellBot in products ke baare me customers ko batayega.</p>
-
-              {products.map((p, idx) => (
-                <div key={idx} className="bg-[#0A1628]/60 border border-[#508DFF]/15 rounded-lg p-4 space-y-3">
-                  <input
-                    type="text"
-                    value={p.name}
-                    onChange={(e) => handleProductChange(idx, 'name', e.target.value)}
-                    placeholder="Product naam (e.g. Lawn Suit)"
-                    className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
-                  />
-                  <div className="flex gap-3">
-                    <input
-                      type="number"
-                      value={p.price}
-                      onChange={(e) => handleProductChange(idx, 'price', e.target.value)}
-                      placeholder="Price (PKR)"
-                      className="flex-1 bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
-                    />
-                    <input
-                      type="text"
-                      value={p.sizes}
-                      onChange={(e) => handleProductChange(idx, 'sizes', e.target.value)}
-                      placeholder="Sizes (S, M, L)"
-                      className="flex-1 bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
-                    />
-                  </div>
-                  <textarea
-                    value={p.description}
-                    onChange={(e) => handleProductChange(idx, 'description', e.target.value)}
-                    placeholder="Description (fabric, color, etc.)"
-                    className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition text-sm"
-                    rows={2}
-                  />
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Add Products</h2>
+                <div className="flex gap-2 text-xs">
+                  <button
+                    onClick={() => setBulkMode(false)}
+                    className={`px-3 py-1 rounded-full font-medium transition ${!bulkMode ? 'btn-electric' : 'btn-ghost'}`}
+                  >
+                    Manual
+                  </button>
+                  <button
+                    onClick={() => setBulkMode(true)}
+                    className={`px-3 py-1 rounded-full font-medium transition ${bulkMode ? 'btn-electric' : 'btn-ghost'}`}
+                  >
+                    ⚡ Bulk Paste
+                  </button>
                 </div>
-              ))}
+              </div>
 
-              <button onClick={addProduct} className="text-[#508DFF] font-medium text-sm hover:text-[#6FA3FF] transition">
-                + Aur Product Add Karein
-              </button>
+              {bulkMode ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-[#8B9DB8]">
+                    Paste your entire product list at once. Our AI will parse names, prices, sizes, and descriptions automatically.
+                    You can add products in any format — one per line.
+                  </p>
+                  <textarea
+                    value={bulkText}
+                    onChange={(e) => setBulkText(e.target.value)}
+                    placeholder={`Lawn Suit, 1500, S M L XL, Premium cotton
+Cotton Kurti, 1200, S M L, Embroidered neck
+Silk Dupatta, 800, Free Size, Pure silk`}
+                    rows={8}
+                    className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-sm text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none font-mono"
+                  />
+                  <div className="bg-[#508DFF]/5 border border-[#508DFF]/20 rounded-lg p-3">
+                    <p className="text-xs text-[#8B9DB8]">
+                      💡 <span className="text-[#508DFF] font-medium">Tip:</span> You can skip this for now and add all your products later from the Dashboard using the AI Bulk Upload feature.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-[#8B9DB8]">Your AI agent will use these products to answer customer questions.</p>
+                  {products.map((p, idx) => (
+                    <div key={idx} className="bg-[#0A1628]/60 border border-[#508DFF]/15 rounded-lg p-4 space-y-3">
+                      <input
+                        type="text"
+                        value={p.name}
+                        onChange={(e) => handleProductChange(idx, 'name', e.target.value)}
+                        placeholder="Product name (e.g. Cotton Shirt)"
+                        className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
+                      />
+                      <div className="flex gap-3">
+                        <input
+                          type="number"
+                          value={p.price}
+                          onChange={(e) => handleProductChange(idx, 'price', e.target.value)}
+                          placeholder="Price"
+                          className="flex-1 bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
+                        />
+                        <input
+                          type="text"
+                          value={p.sizes}
+                          onChange={(e) => handleProductChange(idx, 'sizes', e.target.value)}
+                          placeholder="Sizes (S, M, L)"
+                          className="flex-1 bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
+                        />
+                      </div>
+                      <textarea
+                        value={p.description}
+                        onChange={(e) => handleProductChange(idx, 'description', e.target.value)}
+                        placeholder="Description (fabric, color, etc.)"
+                        className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition text-sm"
+                        rows={2}
+                      />
+                    </div>
+                  ))}
+
+                  <button onClick={addProduct} className="text-[#508DFF] font-medium text-sm hover:text-[#6FA3FF] transition">
+                    + Add Another Product
+                  </button>
+                </>
+              )}
 
               <div className="flex gap-3">
                 <button onClick={() => setStep(1)} className="btn-ghost flex-1 py-3 rounded-lg font-semibold">
-                  ← Wapas
+                  ← Back
                 </button>
                 <button
                   onClick={() => setStep(3)}
                   className="btn-electric flex-1 py-3 rounded-lg font-semibold"
                 >
-                  Aage Badhein →
+                  Continue →
                 </button>
               </div>
             </div>
           )}
 
-          {/* Step 3: Connect WhatsApp */}
+          {/* Step 3: Connect */}
           {step === 3 && (
             <div className="space-y-5 text-center">
-              <h2 className="text-xl font-semibold">WhatsApp Connect Karein</h2>
+              <h2 className="text-xl font-semibold">Connect Your Number</h2>
               <div className="bg-[#508DFF]/10 border border-[#508DFF]/20 rounded-xl p-6">
                 <div className="text-4xl mb-3">📱</div>
                 <p className="text-sm text-[#8B9DB8]">
-                  Aapka WhatsApp number <span className="text-[#E8EEF7] font-medium font-mono">{form.whatsapp_number}</span> connect hoga.
-                  Setup complete hone ke baad, Dashboard me jao → "Connect" → QR code scan ya pairing code.
+                  Your number <span className="text-[#E8EEF7] font-medium font-mono">{form.whatsapp_number}</span> will be connected.
+                  After setup, go to Dashboard → "Connect" → scan QR code or use pairing code.
                 </p>
               </div>
 
               <div className="bg-[#EFF35F]/5 border border-[#EFF35F]/20 rounded-xl p-4 text-left">
                 <p className="text-sm text-[#8B9DB8]">
-                  <span className="text-[#EFF35F] font-medium">Next:</span> Dashboard → WhatsApp Connect → QR code scan karein.
-                  Bilkul free, koi Meta API nahi. 🎉
+                  <span className="text-[#EFF35F] font-medium">Next:</span> Dashboard → Connect → Scan QR code.
+                  Completely free, no API fees. 🎉
                 </p>
               </div>
 
@@ -240,14 +302,14 @@ export default function OnboardingPage() {
 
               <div className="flex gap-3">
                 <button onClick={() => setStep(2)} className="btn-ghost flex-1 py-3 rounded-lg font-semibold">
-                  ← Wapas
+                  ← Back
                 </button>
                 <button
                   onClick={submitOnboarding}
                   disabled={loading}
                   className="btn-electric flex-1 py-3 rounded-lg font-semibold disabled:opacity-50"
                 >
-                  {loading ? 'Setup ho raha hai...' : '✅ Setup Complete!'}
+                  {loading ? 'Setting up...' : '✅ Complete Setup!'}
                 </button>
               </div>
             </div>

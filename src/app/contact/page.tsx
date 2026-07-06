@@ -23,10 +23,10 @@ export default function ContactPage() {
         <div className="relative max-w-4xl mx-auto text-center">
           <div className="inline-block text-xs uppercase tracking-widest text-[#508DFF] font-medium mb-4">Contact</div>
           <h1 className="heading-split text-4xl md:text-6xl mb-6">
-            Sawal? <span className="heading-accent">Baat karte hain.</span>
+            Questions? <span className="heading-accent">Let's talk.</span>
           </h1>
           <p className="text-lg text-[#8B9DB8] max-w-2xl mx-auto">
-            Product ke baare me koi sawal? Demo chahiye? Custom plan? Niche form bharein ya WhatsApp pe direct message karein.
+            Have a question about the product? Need a demo? Want a custom plan? Fill out the form below and we'll get back to you.
           </p>
         </div>
       </section>
@@ -39,46 +39,46 @@ export default function ContactPage() {
             {submitted ? (
               <div className="text-center py-12">
                 <div className="text-5xl mb-4">✅</div>
-                <h3 className="text-xl font-bold mb-2">Shukriya!</h3>
-                <p className="text-[#8B9DB8] text-sm">Aapka message mil gaya. Hum 24 ghante me reply karenge.</p>
+                <h3 className="text-xl font-bold mb-2">Thank you!</h3>
+                <p className="text-[#8B9DB8] text-sm">Your message has been received. We'll reply within 24 hours.</p>
                 <button
                   onClick={() => { setSubmitted(false); setForm({ name: '', business: '', phone: '', message: '' }) }}
                   className="btn-ghost mt-6 px-6 py-2 rounded-lg text-sm"
                 >
-                  Naya message bhejein
+                  Send another message
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm text-[#8B9DB8] mb-2">Naam</label>
+                  <label className="block text-sm text-[#8B9DB8] mb-2">Name</label>
                   <input
                     type="text"
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="Aapka naam"
+                    placeholder="Your name"
                     className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-3 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-[#8B9DB8] mb-2">Business naam</label>
+                  <label className="block text-sm text-[#8B9DB8] mb-2">Business Name</label>
                   <input
                     type="text"
                     value={form.business}
                     onChange={(e) => setForm({ ...form, business: e.target.value })}
-                    placeholder="Aapka business"
+                    placeholder="Your business"
                     className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-3 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-[#8B9DB8] mb-2">WhatsApp number</label>
+                  <label className="block text-sm text-[#8B9DB8] mb-2">Phone Number</label>
                   <input
                     type="tel"
                     required
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    placeholder="923001234567"
+                    placeholder="Your phone number"
                     className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-3 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition font-mono"
                   />
                 </div>
@@ -89,12 +89,12 @@ export default function ContactPage() {
                     rows={4}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    placeholder="Aapka sawal..."
+                    placeholder="Your question..."
                     className="w-full bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-4 py-3 text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition resize-none"
                   />
                 </div>
                 <button type="submit" className="btn-electric w-full py-3 rounded-lg font-medium">
-                  Bhejein →
+                  Send →
                 </button>
               </form>
             )}
@@ -104,24 +104,24 @@ export default function ContactPage() {
           <div className="space-y-6">
             <div className="glass rounded-2xl p-8">
               <div className="text-3xl mb-4">💬</div>
-              <h3 className="font-bold text-lg mb-2">WhatsApp</h3>
-              <p className="text-sm text-[#8B9DB8] mb-3">Direct message bhi kar sakte hain:</p>
+              <h3 className="font-bold text-lg mb-2">Direct Message</h3>
+              <p className="text-sm text-[#8B9DB8] mb-3">You can also reach us directly:</p>
               <a
-                href="https://wa.me/923001234567"
+                href="mailto:hello@sellbot.app"
                 className="text-[#508DFF] font-mono text-sm hover:text-[#6FA3FF] transition"
               >
-                +92 300 1234567
+                hello@sellbot.app
               </a>
             </div>
             <div className="glass rounded-2xl p-8">
               <div className="text-3xl mb-4">⚡</div>
-              <h3 className="font-bold text-lg mb-2">Response time</h3>
-              <p className="text-sm text-[#8B9DB8]">Form ya WhatsApp — dono pe 24 ghante me reply guaranteed. Aksar 1-2 ghante me.</p>
+              <h3 className="font-bold text-lg mb-2">Response Time</h3>
+              <p className="text-sm text-[#8B9DB8]">We guarantee a reply within 24 hours. Usually within 1-2 hours during business hours.</p>
             </div>
             <div className="glass rounded-2xl p-8">
-              <div className="text-3xl mb-4">🇵🇰</div>
-              <h3 className="font-bold text-lg mb-2">Made in Pakistan</h3>
-              <p className="text-sm text-[#8B9DB8]">SellBot.pk Pakistani developers ne banaya hai. Local support, local language, local understanding.</p>
+              <div className="text-3xl mb-4">🚀</div>
+              <h3 className="font-bold text-lg mb-2">Built for Growth</h3>
+              <p className="text-sm text-[#8B9DB8]">SellBot is built by a team focused on one thing: helping businesses capture more sales through AI automation.</p>
             </div>
           </div>
         </div>

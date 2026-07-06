@@ -43,13 +43,13 @@ export default async function DashboardPage() {
         <div className="bg-gradient-to-br from-[#508DFF] to-[#1E4566] rounded-2xl p-6 text-white mb-8 relative overflow-hidden">
           <div className="absolute inset-0 bg-dot-grid opacity-20" />
           <div className="relative">
-            <h2 className="text-lg font-medium mb-1">Aaj ki Report 📊</h2>
-            <p className="text-[#E8EEF7]/70 text-sm mb-6">{new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <h2 className="text-lg font-medium mb-1">Today's Report 📊</h2>
+            <p className="text-[#E8EEF7]/70 text-sm mb-6">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Stat label="Inquiries" value={inquiries} icon="💬" />
               <Stat label="Orders" value={orders} icon="📦" />
               <Stat label="COD Verified" value={codVerified} icon="✅" />
-              <Stat label="Revenue" value={`PKR ${revenue.toLocaleString()}`} icon="💰" />
+              <Stat label="Revenue" value={revenue.toLocaleString()} icon="💰" />
             </div>
           </div>
         </div>
@@ -63,9 +63,9 @@ export default async function DashboardPage() {
 
         {/* Nav cards */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
-          <NavCard href="/dashboard/orders" icon="📦" title="Orders" desc="Sab orders dekhein aur manage karein" />
-          <NavCard href="/dashboard/conversations" icon="💬" title="Conversations" desc="Live chats dekhein — AI + human" />
-          <NavCard href="/dashboard/products" icon="🏷️" title="Products" desc="Catalog add/edit karein" />
+          <NavCard href="/dashboard/orders" icon="📦" title="Orders" desc="View and manage all orders" />
+          <NavCard href="/dashboard/conversations" icon="💬" title="Conversations" desc="View live chats — AI + human" />
+          <NavCard href="/dashboard/products" icon="🏷️" title="Products" desc="Add or edit your catalog" />
         </div>
 
         {/* WhatsApp connect */}
@@ -77,8 +77,8 @@ export default async function DashboardPage() {
             <div className="flex items-center gap-4">
               <div className="text-3xl">📱</div>
               <div>
-                <h3 className="font-semibold mb-1">WhatsApp Connect Karein</h3>
-                <p className="text-sm text-[#8B9DB8]">QR code ya 6-digit pairing code se WhatsApp connect karein — bilkul free!</p>
+                <h3 className="font-semibold mb-1">Connect Your Number</h3>
+                <p className="text-sm text-[#8B9DB8]">Scan a QR code or use a pairing code to connect your number — completely free!</p>
               </div>
               <div className="ml-auto text-[#508DFF] font-medium text-sm">Connect →</div>
             </div>
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
                     <tr key={o.id} className="hover:bg-[#0F2A47]/30 transition">
                       <td className="px-4 py-3 font-mono text-[#8B9DB8]">{o.customer_phone}</td>
                       <td className="px-4 py-3">{Array.isArray(o.items) ? o.items.length : 0} items</td>
-                      <td className="px-4 py-3 text-right font-medium text-[#EFF35F]">PKR {Number(o.total).toLocaleString()}</td>
+                      <td className="px-4 py-3 text-right font-medium text-[#EFF35F]">{Number(o.total).toLocaleString()}</td>
                       <td className="px-4 py-3 uppercase text-xs text-[#8B9DB8]">{o.payment_method}</td>
                       <td className="px-4 py-3">
                         <span className={`text-xs px-2 py-1 rounded-full ${o.status === 'confirmed' ? 'bg-[#EFF35F]/10 text-[#EFF35F]' : o.status === 'pending' ? 'bg-[#508DFF]/10 text-[#508DFF]' : 'bg-[#0F2A47] text-[#5A6B82]'}`}>
@@ -119,7 +119,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="glass rounded-xl p-8 text-center text-[#5A6B82]">
-              Aaj koi order nahi aaya. SellBot wait kar raha hai! 🤖
+              No orders today. Your AI agent is standing by! 🤖
             </div>
           )}
         </div>

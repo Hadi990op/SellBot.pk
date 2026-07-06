@@ -15,9 +15,29 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SellBot.pk — AI Sales Agent for Pakistani WhatsApp Businesses",
-  description: "AI agent jo aapke WhatsApp pe 24/7 Roman Urdu me customers ko reply karta hai, orders confirm karta hai, aur revenue report bhejta hai. Bilkul free connect — QR code ya pairing code.",
-  keywords: ["WhatsApp AI", "Pakistan business", "sales agent", "Roman Urdu AI", "COD verification", "SellBot"],
+  title: "SellBot — AI Sales Agent for Your Business",
+  description: "SellBot is an AI sales agent that connects to your business number and replies to customers 24/7 — answers questions, takes orders, confirms cash-on-delivery, and sends you daily revenue reports, all on autopilot.",
+  keywords: [
+    "AI sales agent",
+    "business chat automation",
+    "24/7 customer support",
+    "order automation",
+    "COD verification",
+    "revenue reports",
+    "SellBot",
+  ],
+  openGraph: {
+    title: "SellBot — AI Sales Agent for Your Business",
+    description: "Your AI sales agent that never misses a customer. Connects to your business number and handles replies, orders, COD verification, and daily revenue reports — 24/7 on autopilot.",
+    url: "https://sellbot.app",
+    siteName: "SellBot",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SellBot — AI Sales Agent for Your Business",
+    description: "Your AI sales agent that never misses a customer. Connects to your business number and handles replies, orders, COD verification, and daily revenue reports — 24/7 on autopilot.",
+  },
 };
 
 export default function RootLayout({

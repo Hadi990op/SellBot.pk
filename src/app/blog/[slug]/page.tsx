@@ -3,86 +3,96 @@ import { notFound } from 'next/navigation'
 import { MarketingNav, MarketingFooter } from '../../marketing'
 
 const posts: Record<string, { title: string; date: string; tag: string; readTime: string; content: string[] }> = {
-  'whatsapp-sales-pakistan': {
-    title: 'Pakistan me WhatsApp pe 40% sales kyun miss hoti hain',
+  'missed-sales-problem': {
+    title: 'Why Businesses Lose 40% of Sales Every Day',
     date: 'July 6, 2026',
     tag: 'Research',
     readTime: '5 min',
     content: [
-      'Pakistan me 21 million se zyada WhatsApp Business accounts hain — world me sabse high ratio. Har business, chhota ya bada, WhatsApp pe customers se baat karta hai. Lekin ek masla hai: zyada tar businesses 24/7 reply nahi karte.',
-      'LinkedIn research ke according, Pakistani businesses 40% tak WhatsApp leads lose karte hain sirf isliye ke koi time pe reply nahi karta. Customer 5 minute me doosri shop pe message karta hai. Aapka lead gaya.',
-      'Raat ke 10 baje staff chala jata hai. Customer 11 baje message karta hai — "Black shirt M size available hai?" Koi reply nahi. Subah 9 baje owner dekhta hai — customer ne doosri shop se khareed liya.',
-      'Iska solution simple hai: 24/7 AI agent jo instant reply kare. Roman Urdu me. Product catalog se price bata de. Order confirm kare. Subah owner ko report bhej de.',
-      'SellBot.pk exactly yahi karta hai. 14 din free trial — koi credit card nahi. 5 minute me setup. QR code scan ya 6-digit pairing code se WhatsApp connect karein aur AI sales agent live.',
+      'Millions of small businesses around the world rely on messaging apps to communicate with customers. But the vast majority only reply during business hours. The result? A significant portion of potential sales simply disappears.',
+      'Research shows that businesses can lose up to 40% of inbound leads simply because no one responds quickly enough. A customer who messages at 11 PM and gets no reply by morning will almost certainly buy from a competitor who answered.',
+      'When staff goes home at 10 PM, customers keep messaging. "Is this available in size M?" No reply. By the time the owner checks in the morning, the customer has already purchased elsewhere.',
+      'The solution is simple: a 24/7 AI agent that replies instantly. It checks your product catalog for prices and availability. It confirms orders. It sends you a morning report.',
+      'SellBot does exactly this. A 14-day free trial — no credit card required. Setup in 5 minutes. Connect your number with a QR code or pairing code, and your AI sales agent goes live.',
     ],
   },
-  'roman-urdu-ai': {
-    title: 'Roman Urdu AI kyun zaroori hai Pakistani businesses ke liye',
+  'multilingual-ai': {
+    title: 'Why Your AI Agent Must Speak Your Customer\'s Language',
     date: 'July 5, 2026',
     tag: 'AI',
     readTime: '4 min',
     content: [
-      'Pakistani customer English me nahi baat karta. Wo likhta hai: "Bhai price kya hai?" ya "Ye available hai kya?" ya "COD ho ga?" Roman Urdu, Urdu script, English mix — sab.',
-      'English-first AI tools (ChatGPT, Meta AI, Google Gemini) Pakistani customer ki language properly nahi samajhte. Wo literal translate karte hain, context miss karte hain, aur robotic reply karte hain.',
-      'SellBot.pk Roman Urdu native hai. System prompt specifically Pakistani customer interactions ke liye design kiya gaya hai. "Assalam o Alaikum" se start karta hai. Emojis use karta hai. COD available bata deta hai. Size chart de deta hai.',
-      'Result: customer ko lagta hai ke real insaan reply kar raha hai — AI nahi. Conversion rates 15% se 25% tak jump kar jate hain.',
+      'Customers don\'t always speak perfect English. They write in their native language — sometimes mixed with English, sometimes in local script, sometimes in romanized form. An AI that only understands English misses context, tone, and intent.',
+      'English-first AI tools translate literally, miss cultural context, and produce robotic replies that feel impersonal. Customers can tell — and they disengage.',
+      'SellBot is designed to mirror your customer\'s language. If they write in their local language, the agent replies in the same way. If they mix English and local language, the agent adapts. It greets naturally, uses appropriate emojis, and confirms COD availability.',
+      'The result: customers feel like they\'re talking to a real person — not a bot. Conversion rates jump from 15% to 25% on average.',
     ],
   },
   'cod-verification-savings': {
-    title: 'COD verification se PKR 15K/month kaise bachayein',
+    title: 'How COD Verification Saves $200+/Month in Fake Orders',
     date: 'July 4, 2026',
     tag: 'Tips',
     readTime: '6 min',
     content: [
-      'Cash on Delivery (COD) Pakistan ka sabse popular payment method hai. Lekin ek masla hai: 30%+ COD orders fake ya cancelled hote hain.',
-      'Customer order deta hai. Courier bheja jata hai. Customer ghar pe nahi hota ya change of mind hota hai. Courier return aata hai. Business courier charges bear karta hai — PKR 200-300 per order.',
-      'Agar din me 50 orders hain aur 30% fake (15 orders), to monthly waste = 15 × 300 × 30 = PKR 135,000. Yeh bahut zyada hai.',
-      'SellBot.pk har order pe customer se "YES" confirm mangta hai. 24 ghante me reply na aane pe order cancel. Is se sirf serious customers ke orders process hote hain.',
-      'Average business 30% fake orders eliminate karta hai — monthly PKR 5,000 se 15,000 tak bachat. SellBot ki fees se zyada.',
+      'Cash on Delivery (COD) is the most popular payment method in many emerging markets. But there\'s a major problem: 30%+ of COD orders are fake or get cancelled.',
+      'A customer places an order. A courier is dispatched. The customer isn\'t home, or they changed their mind. The courier returns. The business eats the courier cost — typically $1-3 per order.',
+      'If you get 50 orders a day and 30% are fake (15 orders), your monthly waste is significant: 15 × $2 × 30 days = $900 per month. That\'s real money lost.',
+      'SellBot asks every customer to confirm with "YES" before processing their order. If no reply comes within 24 hours, the order is automatically cancelled. Only serious customers\' orders get processed.',
+      'On average, businesses eliminate 30% of fake orders — saving $200-600+ per month. That\'s more than the cost of SellBot itself.',
     ],
   },
   'clothing-brand-case-study': {
-    title: 'Lahore clothing brand: PKR 40K/day extra kaise kamaye',
+    title: 'Clothing Brand Case Study: 67% More Orders with Zero Manual Work',
     date: 'July 3, 2026',
     tag: 'Case Study',
     readTime: '7 min',
     content: [
-      'Gulzar Fabrics, Lahore me ek mid-size clothing brand hai. WhatsApp pe daily 200 inquiries aati hain — size, price, color, availability.',
-      'Before SellBot: 3-4 ghante daily manual replies. 15% conversion (30 orders/day). Owner ne ek staff member full-time WhatsApp pe rakha tha — PKR 25,000/month salary.',
-      'After SellBot: 0 hours manual. AI 24/7 replies. 25% conversion (50 orders/day). +20 extra orders × average PKR 2,000 = PKR 40,000/day extra revenue.',
-      'Monthly impact: +PKR 1.2M revenue. SellBot cost: PKR 15,000/month. ROI: 80x.',
-      'Owner ab staff member ko sales aur marketing pe laga raha hai — WhatsApp pe nahi. SellBot handle karta hai.',
+      'A mid-size clothing brand was receiving 200 daily inquiries on their messaging app — questions about sizes, prices, colors, and availability.',
+      'Before SellBot: 3-4 hours of daily manual replies. 15% conversion rate (30 orders/day). The owner had hired a full-time staff member just to handle messages — at a significant monthly salary.',
+      'After SellBot: 0 hours of manual work. The AI replies 24/7. Conversion rate jumped to 25% (50 orders/day). That\'s 20 extra orders per day at an average order value of $7 — $140/day in additional revenue.',
+      'Monthly impact: +$4,200 in revenue. SellBot cost: ~$50/month. ROI: 84x.',
+      'The owner has now reassigned their staff member to sales and marketing — not message-replying. SellBot handles the conversations.',
     ],
   },
-  'restaurant-whatsapp-automation': {
-    title: 'Karachi restaurant raat ke 15 orders kyun lose karta tha',
+  'restaurant-automation': {
+    title: 'Restaurant Case Study: Recovering 15 Lost Orders Per Night',
     date: 'July 2, 2026',
     tag: 'Case Study',
     readTime: '5 min',
     content: [
-      'Lahore Eats, Karachi me ek popular restaurant hai. Delivery orders WhatsApp pe aate hain — Foodpanda se behtar kyunki 25% commission nahi dena.',
-      'Masla: staff 10pm pe band ho jata hai. 10pm se 2am tak customers WhatsApp pe order karte hain — koi reply nahi. 15-20 orders/night lose.',
-      'SellBot connect kiya. Ab 24/7 order-taking. AI menu bhejta hai, order confirm karta hai, delivery address leta hai, aur owner ko subah report.',
-      'Result: 0 lost orders. 15-20 extra orders/night × PKR 500 average = PKR 7,500-10,000/night extra. Monthly: PKR 225,000-300,000.',
-      'Foodpanda commission bhi bachti hai — PKR 15K+/day.',
+      'A popular restaurant was receiving delivery orders via their messaging app — better than third-party platforms because there\'s no 25% commission.',
+      'The problem: staff goes home at 10 PM. From 10 PM to 2 AM, customers message orders — but no one replies. 15-20 orders per night were lost.',
+      'After connecting SellBot, the restaurant now takes orders 24/7. The AI sends the menu, confirms orders, collects delivery addresses, and sends the owner a morning report.',
+      'Result: 0 lost orders. 15-20 extra orders per night at an average of $3 = $45-60/night in additional revenue. Monthly: $1,350-1,800.',
+      'Plus, they save the 25% commission they would have paid to third-party delivery platforms — another $50+/day.',
     ],
   },
-  'whatsapp-vs-foodpanda': {
-    title: 'WhatsApp direct orders vs Foodpanda: commission comparison',
+  'direct-orders-vs-platforms': {
+    title: 'Direct Orders vs. Delivery Platforms: The Commission Problem',
     date: 'July 1, 2026',
     tag: 'Business',
     readTime: '6 min',
     content: [
-      'Foodpanda, Careem, EatOye — sab 25-30% commission lete hain. Ek PKR 1,000 order pe restaurant ko PKR 700-750 milta hai.',
-      'WhatsApp direct order: 0% commission. PKR 1,000 ka order = PKR 1,000 restaurant ko. PKR 250-300 saving per order.',
-      'Lekin WhatsApp pe manual order management mushkil hai — koi 24/7 reply nahi karta, orders track nahi hote, menu repeat nahi hota.',
-      'SellBot.pk is masle ko solve karta hai. AI 24/7 replies, orders database me store, COD verification, daily report. Sab automated.',
-      'Net result: Foodpanda se 25-30% zyada profit per order + 24/7 availability + zero manual work.',
+      'Third-party delivery platforms charge 25-30% commission. On a $10 order, the restaurant gets $7-7.50. That\'s a significant margin cut on every single order.',
+      'Direct orders via your messaging app: 0% commission. $10 order = $10 for you. That\'s $2.50-3 saved per order.',
+      'But managing direct orders manually is hard — no one replies 24/7, orders don\'t get tracked, and menus need to be sent repeatedly.',
+      'SellBot solves this. The AI replies 24/7, stores orders in a database, verifies COD, and sends daily reports. All automated.',
+      'Net result: 25-30% more profit per order + 24/7 availability + zero manual work. Direct ordering finally becomes scalable.',
     ],
   },
 }
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = posts[slug]
+  if (!post) return { title: 'Not Found — SellBot' }
+  return {
+    title: `${post.title} — SellBot Blog`,
+    description: post.content[0]?.slice(0, 160),
+  }
+}
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -118,10 +128,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
           {/* CTA */}
           <div className="glass rounded-2xl p-8 mt-12 text-center">
-            <h3 className="text-xl font-bold mb-3">Aap bhi try karein</h3>
-            <p className="text-sm text-[#8B9DB8] mb-6">14 din free trial. Koi credit card nahi. 5 minute me setup.</p>
+            <h3 className="text-xl font-bold mb-3">Try it yourself</h3>
+            <p className="text-sm text-[#8B9DB8] mb-6">14-day free trial. No credit card required. Setup in 5 minutes.</p>
             <Link href="/onboarding" className="btn-electric px-8 py-3 rounded-lg inline-block">
-              Free Trial Shuru Karein →
+              Start Free Trial →
             </Link>
           </div>
         </div>

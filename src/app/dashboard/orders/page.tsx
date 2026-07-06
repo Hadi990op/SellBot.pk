@@ -17,7 +17,7 @@ export default async function OrdersPage() {
         <h1 className="text-2xl font-bold mb-6">📦 Orders</h1>
         {(!orders || (orders as any[]).length === 0) ? (
           <div className="glass rounded-xl p-12 text-center text-[#5A6B82]">
-            Abhi koi order nahi. Jab customer WhatsApp pe order karega, yahan dikh jayega.
+            No orders yet. When a customer places an order through your AI agent, it will appear here.
           </div>
         ) : (
           <div className="glass rounded-xl overflow-hidden">
@@ -36,10 +36,10 @@ export default async function OrdersPage() {
               <tbody className="divide-y divide-[#508DFF]/10">
                 {(orders as any[]).map((o: any) => (
                   <tr key={o.id} className="hover:bg-[#0F2A47]/30 transition">
-                    <td className="px-4 py-3 text-xs text-[#5A6B82]">{new Date(o.created_at).toLocaleDateString('en-PK')}</td>
+                    <td className="px-4 py-3 text-xs text-[#5A6B82]">{new Date(o.created_at).toLocaleDateString('en-US')}</td>
                     <td className="px-4 py-3 font-mono text-[#8B9DB8]">{o.customer_phone}</td>
                     <td className="px-4 py-3">{Array.isArray(o.items) ? o.items.length : 0} items</td>
-                    <td className="px-4 py-3 text-right font-medium text-[#EFF35F]">PKR {Number(o.total).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-right font-medium text-[#EFF35F]">{Number(o.total).toLocaleString()}</td>
                     <td className="px-4 py-3 uppercase text-xs text-[#8B9DB8]">{o.payment_method}</td>
                     <td className="px-4 py-3">{o.cod_verified ? '✅' : '⏳'}</td>
                     <td className="px-4 py-3">

@@ -1,5 +1,9 @@
 import Link from 'next/link'
 
+export const metadata = {
+  title: 'Page Not Found — SellBot',
+}
+
 export default function NotFound() {
   return (
     <main className="min-h-screen bg-[#0A1628] text-[#E8EEF7] flex items-center justify-center px-6 relative overflow-hidden">
@@ -9,10 +13,10 @@ export default function NotFound() {
       <div className="relative text-center max-w-md">
         <div className="font-mono text-8xl font-bold text-[#508DFF]/30 mb-4">404</div>
         <h1 className="heading-split text-3xl mb-4">
-          Page <span className="heading-accent">nahi mila.</span>
+          Page <span className="heading-accent">not found.</span>
         </h1>
         <p className="text-[#8B9DB8] mb-8">
-          Ye page exist nahi karta. Shayad move ho gaya ya delete ho gaya.
+          This page doesn't exist. It may have been moved or deleted.
         </p>
         <div className="flex gap-3 justify-center">
           <Link href="/" className="btn-electric px-6 py-3 rounded-lg">

@@ -42,7 +42,7 @@ export default function ConnectPage() {
           setQrImage(data.qr)
         }
       } catch (e) {
-        if (active) setError('QR code fetch nahi ho saka')
+        if (active) setError('Could not fetch QR code')
       }
     }
 
@@ -53,7 +53,7 @@ export default function ConnectPage() {
 
   const requestPairingCode = async () => {
     if (!phoneInput) {
-      setError('Phone number daalein')
+      setError('Please enter your phone number')
       return
     }
     setLoading(true)
@@ -68,9 +68,9 @@ export default function ConnectPage() {
       if (data.code) {
         setPairingCode(data.code)
       } else if (data.message) {
-        setError(data.message + ' 3 second baad dobara try karein.')
+        setError(data.message + ' Please try again in a few seconds.')
       } else {
-        setError('Pairing code generate nahi hua')
+        setError('Could not generate pairing code')
       }
     } catch (e: any) {
       setError(e?.message || 'Error')
@@ -79,7 +79,7 @@ export default function ConnectPage() {
   }
 
   const disconnect = async () => {
-    if (!confirm('WhatsApp disconnect karna hai?')) return
+    if (!confirm('Disconnect your number?')) return
     try {
       await fetch('/sellbot/api/baileys/disconnect', { method: 'POST' })
       setConnected(false)
@@ -93,9 +93,9 @@ export default function ConnectPage() {
     <main className="min-h-screen bg-[#0A1628] text-[#E8EEF7]">
       <DashboardHeader business={null} />
       <div className="max-w-2xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-2">📱 WhatsApp Connect</h1>
+        <h1 className="text-2xl font-bold mb-2">📱 Connect Your Number</h1>
         <p className="text-sm text-[#8B9DB8] mb-6">
-          Apna WhatsApp number connect karein — bilkul free, koi Meta API ya payment nahi chahiye.
+          Connect your messaging app number — completely free, no API fees or payment required.
         </p>
 
         {/* Status banner */}
@@ -104,10 +104,10 @@ export default function ConnectPage() {
             <div className={`w-3 h-3 rounded-full ${connected ? 'bg-[#EFF35F]' : 'bg-[#508DFF] animate-pulse'}`} />
             <div>
               <div className={`font-medium text-sm ${connected ? 'text-[#EFF35F]' : 'text-[#508DFF]'}`}>
-                {connected ? '✅ WhatsApp Connected' : '⏳ ' + status}
+                {connected ? '✅ Connected' : '⏳ ' + status}
               </div>
               {!connected && (
-                <div className="text-xs text-[#5A6B82] mt-0.5">Neeche QR scan ya pairing code use karein</div>
+                <div className="text-xs text-[#5A6B82] mt-0.5">Scan the QR code or use a pairing code below</div>
               )}
             </div>
           </div>
@@ -116,13 +116,13 @@ export default function ConnectPage() {
         {connected ? (
           <div className="glass rounded-xl p-6 text-center">
             <div className="text-4xl mb-3">✅</div>
-            <h3 className="font-bold text-lg mb-2">WhatsApp Connected!</h3>
+            <h3 className="font-bold text-lg mb-2">Number Connected!</h3>
             <p className="text-sm text-[#8B9DB8] mb-4">{status}</p>
             <button
               onClick={disconnect}
               className="text-red-400 text-sm font-medium hover:underline"
             >
-              Disconnect karein
+              Disconnect
             </button>
           </div>
         ) : (
@@ -150,19 +150,19 @@ export default function ConnectPage() {
             {/* QR Code tab */}
             {tab === 'qr' && (
               <div className="glass rounded-xl p-6">
-                <h3 className="font-semibold mb-3">WhatsApp se QR scan karein</h3>
+                <h3 className="font-semibold mb-3">Scan with your messaging app</h3>
                 <ol className="text-sm text-[#8B9DB8] space-y-2 mb-4">
-                  <li>1. Apne phone me WhatsApp open karein</li>
-                  <li>2. Settings → Linked Devices → Link a Device</li>
-                  <li>3. Niche QR code scan karein</li>
+                  <li>1. Open your messaging app on your phone</li>
+                  <li>2. Go to Settings → Linked Devices → Link a Device</li>
+                  <li>3. Scan the QR code below</li>
                 </ol>
                 {qrImage ? (
                   <div className="flex justify-center bg-white p-3 rounded-lg w-fit mx-auto">
-                    <img src={qrImage} alt="WhatsApp QR Code" className="w-64 h-64 rounded-lg" />
+                    <img src={qrImage} alt="QR Code" className="w-64 h-64 rounded-lg" />
                   </div>
                 ) : (
                   <div className="w-64 h-64 mx-auto bg-[#0F2A47] rounded-lg flex items-center justify-center text-[#5A6B82] text-sm">
-                    QR code generate ho raha hai...
+                    Generating QR code...
                   </div>
                 )}
               </div>
@@ -171,15 +171,15 @@ export default function ConnectPage() {
             {/* Pairing Code tab */}
             {tab === 'code' && (
               <div className="glass rounded-xl p-6">
-                <h3 className="font-semibold mb-3">Phone number se connect karein</h3>
+                <h3 className="font-semibold mb-3">Connect with your phone number</h3>
                 <p className="text-sm text-[#8B9DB8] mb-4">
-                  Apna WhatsApp number daalein (country code ke saath, e.g. 923001234567).
-                  Ek 6-digit code aayega jo WhatsApp me enter karna hai.
+                  Enter your phone number (with country code, e.g. 1234567890).
+                  You'll receive a 6-digit code to enter in your messaging app.
                 </p>
                 <div className="flex gap-2 mb-4">
                   <input
                     type="tel"
-                    placeholder="923001234567"
+                    placeholder="1234567890"
                     value={phoneInput}
                     onChange={(e) => setPhoneInput(e.target.value)}
                     className="flex-1 bg-[#0A1628] border border-[#508DFF]/20 rounded-lg px-3 py-2 text-sm font-mono text-[#E8EEF7] placeholder-[#5A6B82] focus:border-[#508DFF] focus:outline-none transition"
@@ -189,18 +189,18 @@ export default function ConnectPage() {
                     disabled={loading}
                     className="btn-electric px-6 py-2 rounded-lg font-medium text-sm disabled:opacity-50"
                   >
-                    {loading ? '...' : 'Code Le'}
+                    {loading ? '...' : 'Get Code'}
                   </button>
                 </div>
 
                 {pairingCode && (
                   <div className="bg-[#EFF35F]/10 border border-[#EFF35F]/30 rounded-lg p-6 text-center">
-                    <div className="text-xs text-[#EFF35F] mb-2">Aapka pairing code:</div>
+                    <div className="text-xs text-[#EFF35F] mb-2">Your pairing code:</div>
                     <div className="text-4xl font-bold tracking-widest text-[#EFF35F] mb-3 font-mono">
                       {pairingCode}
                     </div>
                     <p className="text-sm text-[#8B9DB8]">
-                      WhatsApp → Settings → Linked Devices → Link with Phone Number → ye code enter karein
+                      Open your messaging app → Settings → Linked Devices → Link with Phone Number → enter this code
                     </p>
                   </div>
                 )}
@@ -217,11 +217,11 @@ export default function ConnectPage() {
 
         {/* Info */}
         <div className="mt-8 bg-[#508DFF]/5 border border-[#508DFF]/20 rounded-xl p-4">
-          <div className="font-medium text-[#508DFF] mb-1">💡 Ye kaise kaam karta hai?</div>
+          <div className="font-medium text-[#508DFF] mb-1">💡 How does this work?</div>
           <p className="text-sm text-[#8B9DB8]">
-            SellBot aapke WhatsApp ko ek "Linked Device" ki tarah connect karta hai (jaise WhatsApp Web).
-            Bilkul free — koi Meta Business API, koi payment, koi limit nahi.
-            Customer messages directly aapke WhatsApp pe aate hain, aur AI automatically reply karta hai.
+            SellBot connects to your messaging app as a linked device (just like a web client).
+            Completely free — no API fees, no payment, no limits.
+            Customer messages arrive directly on your number, and the AI replies automatically.
           </p>
         </div>
       </div>

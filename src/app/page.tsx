@@ -13,7 +13,7 @@ export default function Home() {
               <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#EFF35F] opacity-80 mix-blend-screen" />
             </div>
             <span className="text-lg font-bold tracking-tight">
-              SellBot<span className="text-[#508DFF]">.pk</span>
+              SellBot
             </span>
           </Link>
           <div className="hidden md:flex items-center gap-8 text-sm text-[#8B9DB8]">
@@ -44,30 +44,30 @@ export default function Home() {
           {/* Tag */}
           <div className="inline-flex items-center gap-2 tag-acid px-4 py-1.5 rounded-full text-xs font-medium mb-8 animate-fade-up">
             <span className="w-1.5 h-1.5 rounded-full bg-[#EFF35F] animate-pulse" />
-            Pakistan's first AI WhatsApp sales agent
+            AI sales agent for your business chat
           </div>
 
           {/* Headline — split weight (Guardbase signature) */}
           <h1 className="heading-split text-5xl md:text-7xl mb-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-            Har WhatsApp message<br />
-            <span className="heading-accent">ek sale ban jaye.</span>
+            Your AI sales agent.<br />
+            <span className="heading-accent">Never misses a customer.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-[#8B9DB8] max-w-2xl mx-auto mb-10 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            AI agent jo aapke WhatsApp pe <span className="text-[#E8EEF7] font-medium">24/7 Roman Urdu me</span> customers ko reply karta hai, orders confirm karta hai, aur subah aapko revenue report bhejta hai. Aap so rahe ho, SellBot kaam kar raha hai.
+            A 24/7 AI agent that connects to <span className="text-[#E8EEF7] font-medium">your business number</span> and replies to customers, takes orders, confirms cash-on-delivery, and sends you daily revenue reports — all on autopilot. You sleep, SellBot works.
           </p>
 
           {/* CTAs */}
           <div className="flex gap-4 justify-center flex-wrap mb-6 animate-fade-up" style={{ animationDelay: '0.3s' }}>
             <Link href="/onboarding" className="btn-electric px-8 py-3.5 rounded-xl text-base">
-              14 Din Free Trial Shuru Karein →
+              Start Your 14-Day Free Trial →
             </Link>
             <a href="#how" className="btn-ghost px-8 py-3.5 rounded-xl text-base">
-              ↓ Kaise Kaam Karta Hai
+              ↓ How It Works
             </a>
           </div>
           <p className="text-sm text-[#5A6B82] animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            Koi credit card nahi • QR code se 5 minute me connect • Cancel kabhi bhi
+            No credit card required • Connect in 5 minutes • Cancel anytime
           </p>
         </div>
 
@@ -80,14 +80,14 @@ export default function Home() {
                 <div className="w-3 h-3 rounded-full bg-[#EFF35F]/40" />
                 <div className="w-3 h-3 rounded-full bg-[#508DFF]/40" />
                 <div className="w-3 h-3 rounded-full bg-[#8B9DB8]/20" />
-                <div className="ml-4 text-xs text-[#5A6B82] font-mono">dashboard.sellbot.pk</div>
+                <div className="ml-4 text-xs text-[#5A6B82] font-mono">dashboard.sellbot.app</div>
               </div>
               {/* Mock dashboard */}
               <div className="p-6 grid grid-cols-3 gap-3 text-left">
                 <div className="col-span-1 space-y-3">
-                  <div className="text-xs text-[#5A6B82] uppercase tracking-wider">Aaj</div>
+                  <div className="text-xs text-[#5A6B82] uppercase tracking-wider">Today</div>
                   <div className="text-2xl font-bold text-[#EFF35F]">12 orders</div>
-                  <div className="text-lg font-bold text-[#508DFF]">PKR 47K</div>
+                  <div className="text-lg font-bold text-[#508DFF]">$47K</div>
                   <div className="space-y-2 pt-2">
                     <div className="h-2 rounded-full bg-[#508DFF]/20"><div className="h-2 w-3/4 rounded-full bg-[#508DFF]" /></div>
                     <div className="h-2 rounded-full bg-[#508DFF]/20"><div className="h-2 w-1/2 rounded-full bg-[#508DFF]" /></div>
@@ -96,9 +96,9 @@ export default function Home() {
                 </div>
                 <div className="col-span-2 space-y-3">
                   <div className="text-xs text-[#5A6B82] uppercase tracking-wider">Live Conversations</div>
-                  <MockChat name="Gulzar Fabrics" msg="Customer: Black shirt M size available? → AI: Haan ji! M available hai, PKR 1,200. COD available. Order karne ke liye YES reply karein ✨" />
-                  <MockChat name="Lahore Eats" msg="Customer: 2x biryani delivery → AI: Confirmed! 2x biryani, PKR 800, delivery 30 min. Address share karein 🌟" />
-                  <MockChat name="Dr. Khan Clinic" msg="Customer: Appointment tomorrow? → AI: 2pm aur 4pm available. Kaunsa suit karta hai? 😊" />
+                  <MockChat name="Gulzar Fabrics" msg="Customer: Is the black shirt available in size M? → AI: Yes! Size M is in stock for $1,200. Cash on delivery available. Reply YES to place your order ✨" />
+                  <MockChat name="Lahore Eats" msg="Customer: 2x biryani for delivery → AI: Confirmed! 2x biryani, $800, delivery in 30 min. Please share your address 🌟" />
+                  <MockChat name="Dr. Khan Clinic" msg="Customer: Appointment tomorrow? → AI: 2pm and 4pm are available. Which time suits you? 😊" />
                 </div>
               </div>
             </div>
@@ -111,25 +111,21 @@ export default function Home() {
         <div className="flex gap-12 animate-marquee whitespace-nowrap">
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex gap-12 items-center text-[#5A6B82] text-sm font-medium">
-              <span>🇵🇰 21M+ WhatsApp Business accounts in Pakistan</span>
+              <span>40% of revenue lost to ignored leads</span>
               <span className="text-[#508DFF]">•</span>
-              <span>40% revenue lost to ignored leads</span>
+              <span>24/7 — never sleeps</span>
               <span className="text-[#508DFF]">•</span>
-              <span>24/7 never sleeps</span>
+              <span>$9–$25/mo plans</span>
               <span className="text-[#508DFF]">•</span>
-              <span>PKR 15K-25K/mo plans</span>
+              <span>14-day free trial</span>
               <span className="text-[#508DFF]">•</span>
-              <span>14 din free trial</span>
+              <span>40% of revenue lost to ignored leads</span>
               <span className="text-[#508DFF]">•</span>
-              <span>🇵🇰 21M+ WhatsApp Business accounts in Pakistan</span>
+              <span>24/7 — never sleeps</span>
               <span className="text-[#508DFF]">•</span>
-              <span>40% revenue lost to ignored leads</span>
+              <span>$9–$25/mo plans</span>
               <span className="text-[#508DFF]">•</span>
-              <span>24/7 never sleeps</span>
-              <span className="text-[#508DFF]">•</span>
-              <span>PKR 15K-25K/mo plans</span>
-              <span className="text-[#508DFF]">•</span>
-              <span>14 din free trial</span>
+              <span>14-day free trial</span>
             </div>
           ))}
         </div>
@@ -137,11 +133,11 @@ export default function Home() {
 
       {/* ===================== STATS ===================== */}
       <section className="py-20 px-6">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          <StatCard value="21M+" label="WhatsApp Business users in Pakistan" />
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap- gap-6">
+          <StatCard value="24/7" label="Always-on customer replies" />
           <StatCard value="40%" label="Revenue lost to unanswered messages" />
-          <StatCard value="24/7" label="SellBot never sleeps" />
-          <StatCard value="0" label="Credit card required" />
+          <StatCard value="5 min" label="To go live with your number" />
+          <StatCard value="0" label="Credit card required to start" />
         </div>
       </section>
 
@@ -150,26 +146,26 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <SectionHeader
             tag="How it works"
-            title={<>5 minute me <span className="heading-accent">live.</span></>}
-            subtitle="Aapka existing WhatsApp number connect karein, catalog add karein, aur AI auto-pilot pe."
+            title={<>Live in <span className="heading-accent">5 minutes.</span></>}
+            subtitle="Connect your existing number, add your product catalog, and the AI runs on autopilot."
           />
           <div className="grid md:grid-cols-3 gap-6 mt-12">
             <StepCard
               num="01"
-              title="WhatsApp Connect"
-              desc="QR code scan ya 6-digit pairing code se apna WhatsApp connect karein. Bilkul free — koi Meta API ya payment nahi."
+              title="Connect your number"
+              desc="Scan a QR code or enter a 6-digit pairing code to connect your existing business number. No new number needed — your customers keep chatting with you."
               icon="📱"
             />
             <StepCard
               num="02"
-              title="Catalog Add Karein"
-              desc="Products add karein — naam, price, sizes, description. SellBot sab yaad rakhega aur customers ko bata dega."
+              title="Add your catalog"
+              desc="Add your products — name, price, sizes, and description. SellBot remembers everything and tells customers exactly what they need to know."
               icon="🏷️"
             />
             <StepCard
               num="03"
-              title="Sales Auto-Pilot"
-              desc="Customer message kare → AI Roman Urdu me reply → order confirm → subah aapko revenue report WhatsApp pe."
+              title="Sales on autopilot"
+              desc="A customer messages in → the AI replies instantly → confirms the order → and sends you a daily revenue report every morning."
               icon="🤖"
             />
           </div>
@@ -181,22 +177,22 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <SectionHeader
             tag="Features"
-            title={<>Competitors se <span className="heading-accent">kya behtar?</span></>}
-            subtitle="7 features jo Pakistani SMBs ke liye banaye gaye — Roman Urdu, COD, revenue reports, aur zyada."
+            title={<>Built to <span className="heading-accent">sell for you.</span></>}
+            subtitle="Everything a growing business needs — instant replies, COD verification, revenue reports, and more."
           />
           {/* Bento grid */}
           <div className="grid md:grid-cols-3 gap-4 mt-12">
-            {/* Large feature — Roman Urdu */}
+            {/* Large feature — Natural conversation */}
             <div className="glass rounded-2xl p-8 md:col-span-2 md:row-span-1 hover:border-[#508DFF]/40 transition">
               <div className="flex items-start gap-4">
-                <div className="text-4xl">🇵🇰</div>
+                <div className="text-4xl">💬</div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2">Roman Urdu First</h3>
-                  <p className="text-[#8B9DB8] text-sm leading-relaxed">'Bhai black shirt M size ka price kya hai?' — SellBot native samjhta hai. English-first tools (ChatGPT, Meta AI) Pakistani customer ki language nahi samajhte. Hum samajhte hain.</p>
+                  <h3 className="text-xl font-bold mb-2">Natural Conversation</h3>
+                  <p className="text-[#8B9DB8] text-sm leading-relaxed">"Is the black shirt available in size M?" — SellBot understands your customers like a trained sales rep. It replies naturally, answers follow-up questions, and guides every conversation toward a sale.</p>
                   <div className="mt-4 flex gap-2 flex-wrap">
-                    <span className="tag-acid px-3 py-1 rounded-full text-xs">Roman Urdu</span>
-                    <span className="tag-acid px-3 py-1 rounded-full text-xs">Urdu script</span>
-                    <span className="tag-acid px-3 py-1 rounded-full text-xs">English mix</span>
+                    <span className="tag-acid px-3 py-1 rounded-full text-xs">Instant replies</span>
+                    <span className="tag-acid px-3 py-1 rounded-full text-xs">Follow-up aware</span>
+                    <span className="tag-acid px-3 py-1 rounded-full text-xs">Sale-focused</span>
                   </div>
                 </div>
               </div>
@@ -205,25 +201,25 @@ export default function Home() {
             <div className="glass rounded-2xl p-8 hover:border-[#508DFF]/40 transition">
               <div className="text-4xl mb-4">💵</div>
               <h3 className="text-xl font-bold mb-2">COD Verification</h3>
-              <p className="text-[#8B9DB8] text-sm">Fake COD orders 30%+ hote hain. SellBot har order verify karta hai — PKR 5-15K/mo bachat.</p>
+              <p className="text-[#8B9DB8] text-sm">Fake cash-on-delivery orders cost businesses 30%+ in wasted deliveries. SellBot verifies every order before it ships — saving you money every month.</p>
             </div>
             {/* Daily Report */}
             <div className="glass rounded-2xl p-8 hover:border-[#508DFF]/40 transition">
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-xl font-bold mb-2">Daily Report</h3>
-              <p className="text-[#8B9DB8] text-sm">Har subah 9 baje WhatsApp pe: 'Kal 12 order, PKR 47,000 — aap so rahe the.'</p>
+              <h3 className="text-xl font-bold mb-2">Daily Revenue Report</h3>
+              <p className="text-[#8B9DB8] text-sm">Every morning at 9 AM you get a summary: "Yesterday — 12 orders, $47,000 — while you were asleep."</p>
             </div>
             {/* Abandoned Recovery */}
             <div className="glass rounded-2xl p-8 hover:border-[#508DFF]/40 transition">
               <div className="text-4xl mb-4">🔄</div>
               <h3 className="text-xl font-bold mb-2">Abandoned Recovery</h3>
-              <p className="text-[#8B9DB8] text-sm">Customer ne 'sochta hu' kaha? SellBot 4 ghante baad smart follow-up karta hai.</p>
+              <p className="text-[#8B9DB8] text-sm">A customer said "I'll think about it"? SellBot sends a smart follow-up 4 hours later to bring them back.</p>
             </div>
             {/* Self-learning */}
             <div className="glass rounded-2xl p-8 hover:border-[#508DFF]/40 transition">
               <div className="text-4xl mb-4">🧠</div>
-              <h3 className="text-xl font-bold mb-2">Aapki Tarah Baat</h3>
-              <p className="text-[#8B9DB8] text-sm">Owner ke past chats se seekhta hai — aapka tone, aapke words, aapki style.</p>
+              <h3 className="text-xl font-bold mb-2">Learns Your Voice</h3>
+              <p className="text-[#8B9DB8] text-sm">SellBot learns from your past conversations — your tone, your words, your style — so every reply sounds like it came from you.</p>
             </div>
             {/* Multi-agent */}
             <div className="glass rounded-2xl p-8 md:col-span-2 hover:border-[#508DFF]/40 transition">
@@ -231,7 +227,7 @@ export default function Home() {
                 <div className="text-4xl">👥</div>
                 <div>
                   <h3 className="text-xl font-bold mb-2">Multi-Agent Inbox</h3>
-                  <p className="text-[#8B9DB8] text-sm leading-relaxed">1 se 5 staff tak scale. AI 80% conversations handle karta hai, complex 20% me humans ko AI-suggested replies milte hain. Sab ek inbox me — organized, tracked, measured.</p>
+                  <p className="text-[#8B9DB8] text-sm leading-relaxed">Scale from one person up to five staff members. The AI handles 80% of conversations automatically, and for the complex 20%, your team gets AI-suggested replies to send in one tap. Everything in one inbox — organized, tracked, and measured.</p>
                   <div className="mt-4 grid grid-cols-3 gap-2">
                     <div className="bg-[#508DFF]/10 rounded-lg px-3 py-2 text-center text-xs">
                       <div className="text-[#508DFF] font-bold">80%</div>
@@ -259,26 +255,26 @@ export default function Home() {
           <SectionHeader
             tag="Real results"
             title={<>Before. <span className="heading-accent">After.</span></>}
-            subtitle="Pakistani businesses me real impact — data-driven, verified scenarios."
+            subtitle="The real impact on growing businesses — data-driven, verified scenarios."
           />
           <div className="space-y-6 mt-12">
             <CaseCard
               industry="Clothing Brand — Lahore"
-              before="200 WhatsApp inquiries/day, 15% conversion, 3-4 hours manual replies"
-              after="25% conversion, 0 hours manual, +20 extra orders/day = +PKR 40,000/day"
-              metric="+PKR 40K/day"
+              before="200 inquiries per day, 15% conversion rate, 3–4 hours of manual replies"
+              after="25% conversion rate, 0 hours of manual replies, +20 extra orders per day"
+              metric="+$40K/day"
             />
             <CaseCard
               industry="Restaurant — Karachi"
-              before="15-20 orders/night lost after 10pm when staff goes home"
-              after="Zero lost orders. 24/7 order-taking. Foodpanda commission saved."
-              metric="PKR 15K+/day saved"
+              before="15–20 orders lost every night after 10 PM when staff went home"
+              after="Zero lost orders. 24/7 order-taking. No more third-party delivery commissions."
+              metric="$15K+/day saved"
             />
             <CaseCard
               industry="Clinic — Rawalpindi"
               before="Missed appointment calls all day, receptionist overwhelmed"
-              after="24/7 appointment booking. No-shows dropped 50%. +PKR 1.2M/mo uplift"
-              metric="+PKR 1.2M/mo"
+              after="24/7 appointment booking. No-shows dropped 50%. Significant monthly revenue uplift"
+              metric="+$1.2M/mo"
             />
           </div>
         </div>
@@ -289,32 +285,32 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <SectionHeader
             tag="Pricing"
-            title={<>14 din free. <span className="heading-accent">Phir choose karein.</span></>}
-            subtitle="Koi credit card nahi. Cancel kabhi bhi. Pakistani businesses ke liye priced."
+            title={<>14 days free. <span className="heading-accent">Then decide.</span></>}
+            subtitle="No credit card required. Cancel anytime. Priced for growing businesses."
           />
           <div className="grid md:grid-cols-3 gap-6 mt-12">
             <PricingCard
               name="Starter"
-              price="9,000"
-              tagline="Chhote businesses ke liye"
-              features={["1 AI Agent", "500 conversations/month", "Basic dashboard", "Roman Urdu support", "WhatsApp connect"]}
+              price="$9"
+              tagline="For small businesses"
+              features={["1 AI Agent", "500 conversations/month", "Basic dashboard", "Connect your number", "Daily summary"]}
             />
             <PricingCard
               name="Growth"
-              price="15,000"
+              price="$15"
               tagline="Most businesses choose this"
               features={["Unlimited conversations", "Full dashboard", "COD verification", "Abandoned recovery", "Daily revenue report", "Product catalog"]}
               popular
             />
             <PricingCard
               name="Pro"
-              price="25,000"
-              tagline="Scale karne wale brands"
+              price="$25"
+              tagline="For scaling brands"
               features={["Multi-agent inbox (5 staff)", "Broadcast campaigns", "Advanced analytics", "Priority support", "Custom integrations", "API access"]}
             />
           </div>
           <p className="text-center text-[#5A6B82] text-sm mt-8">
-            Sab plans me <span className="text-[#EFF35F]">14 din free trial</span> included. Koi payment nahi jab tak aap satisfied na ho.
+            Every plan includes a <span className="text-[#EFF35F]">14-day free trial</span>. No payment until you're satisfied.
           </p>
         </div>
       </section>
@@ -324,16 +320,16 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <SectionHeader
             tag="FAQ"
-            title={<>Sawal? <span className="heading-accent">Jawab.</span></>}
+            title={<>Questions? <span className="heading-accent">Answered.</span></>}
             subtitle=""
           />
           <div className="space-y-4 mt-10">
-            <FAQItem q="Kya SellBot free hai?" a="14 din ka free trial hai — koi credit card nahi. Trial ke baad Starter (PKR 9K/mo), Growth (PKR 15K/mo), ya Pro (PKR 25K/mo) choose karein." />
-            <FAQItem q="Mera WhatsApp number change karna padega?" a="Nahi! Aapka existing WhatsApp Business ya personal number connect hota hai. QR code ya 6-digit pairing code se — jaise WhatsApp Web. Customers ko koi farak nahi parta." />
-            <FAQItem q="Koi Meta approval ya payment chahiye?" a="Bilkul nahi. SellBot WhatsApp Web protocol use karta hai — koi Meta Business API, koi verification, koi monthly fee Meta ko. Bilkul free connect." />
-            <FAQItem q="AI Roman Urdu samajhta hai?" a="Haan! SellBot Pakistani customers ke liye banaya gaya hai. Roman Urdu, Urdu script, aur English mix — sab samajhta hai aur usi language me reply karta hai." />
-            <FAQItem q="Fake COD orders se kaise bachata hai?" a="Har order pe SellBot customer se 'YES' confirm mangta hai. 24 ghante me reply na aane pe order cancel. Is se 30%+ fake orders eliminate ho jate hain." />
-            <FAQItem q="Mera data safe hai?" a="Haan. Conversations encrypted database me store hote hain. Aapka data kabhi third party ke saath share nahi hota. Cancel karne pe delete kar diya jata hai." />
+            <FAQItem q="Is SellBot free?" a="You get a 14-day free trial — no credit card required. After the trial, choose Starter ($9/mo), Growth ($15/mo), or Pro ($25/mo)." />
+            <FAQItem q="Do I need to change my number?" a="No! Your existing business number connects directly. Use a QR code or a 6-digit pairing code — just like linking a new device. Your customers won't notice a thing." />
+            <FAQItem q="How long does setup take?" a="About 5 minutes. Connect your number, add your products, and the AI is live. No technical knowledge required." />
+            <FAQItem q="What languages does the AI understand?" a="SellBot understands your customers however they write — in English, in local script, or mixed. It always replies in the same style your customer used." />
+            <FAQItem q="How does it handle fake COD orders?" a="For every order, SellBot asks the customer to reply 'YES' to confirm. If there's no reply within 24 hours, the order is automatically cancelled. This eliminates 30%+ of fake orders." />
+            <FAQItem q="Is my data safe?" a="Yes. All conversations are stored in an encrypted database. Your data is never shared with any third party, and it's permanently deleted when you cancel your account." />
           </div>
         </div>
       </section>
@@ -344,17 +340,17 @@ export default function Home() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#508DFF]/15 rounded-full blur-[100px] pointer-events-none" />
         <div className="relative max-w-3xl mx-auto text-center">
           <h2 className="heading-split text-4xl md:text-6xl mb-6">
-            Har miss hua message<br />
-            <span className="heading-accent">ek miss hui sale hai.</span>
+            Every missed message<br />
+            <span className="heading-accent">is a missed sale.</span>
           </h2>
           <p className="text-lg text-[#8B9DB8] mb-10 max-w-xl mx-auto">
-            Aaj hi apna WhatsApp connect karein. 5 minute me AI sales agent live.
+            Connect your number today. Your AI sales agent goes live in 5 minutes.
           </p>
           <Link href="/onboarding" className="btn-electric px-10 py-4 rounded-xl text-lg inline-flex items-center gap-2 animate-pulse-glow">
-            14 Din Free Trial Shuru Karein
+            Start Your 14-Day Free Trial
             <span>→</span>
           </Link>
-          <p className="text-sm text-[#5A6B82] mt-4">Koi credit card nahi • 5 min me setup • Cancel kabhi bhi</p>
+          <p className="text-sm text-[#5A6B82] mt-4">No credit card required • 5-minute setup • Cancel anytime</p>
         </div>
       </section>
 
@@ -369,9 +365,9 @@ export default function Home() {
                   <div className="absolute inset-0 w-6 h-6 rounded-md bg-[#508DFF] opacity-90" />
                   <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#EFF35F] opacity-80 mix-blend-screen" />
                 </div>
-                <span className="text-lg font-bold">SellBot<span className="text-[#508DFF]">.pk</span></span>
+                <span className="text-lg font-bold">SellBot</span>
               </Link>
-              <p className="text-sm text-[#5A6B82]">Pakistani businesses ke liye banaya gaya. 🇵🇰</p>
+              <p className="text-sm text-[#5A6B82]">Made for growing businesses.</p>
             </div>
             {/* Links */}
             <div>
@@ -397,12 +393,12 @@ export default function Home() {
               <div className="space-y-2 text-sm">
                 <Link href="/onboarding" className="text-[#508DFF] hover:text-[#6FA3FF] transition block font-medium">Free Trial →</Link>
                 <Link href="/dashboard" className="text-[#8B9DB8] hover:text-[#E8EEF7] transition block">Dashboard</Link>
-                <Link href="/dashboard/connect" className="text-[#8B9DB8] hover:text-[#E8EEF7] transition block">Connect WhatsApp</Link>
+                <Link href="/dashboard/connect" className="text-[#8B9DB8] hover:text-[#E8EEF7] transition block">Connect Your Number</Link>
               </div>
             </div>
           </div>
           <div className="border-t border-[#508DFF]/10 pt-6 flex justify-between items-center flex-wrap gap-4">
-            <p className="text-xs text-[#5A6B82]">© 2026 SellBot.pk. All rights reserved. Made in Pakistan 🇵🇰</p>
+            <p className="text-xs text-[#5A6B82]">© 2026 SellBot. All rights reserved.</p>
             <p className="text-xs text-[#5A6B82] font-mono">Trust. Technical Depth. Focus.</p>
           </div>
         </div>
@@ -488,7 +484,7 @@ function PricingCard({ name, price, tagline, features, popular }: { name: string
       <h3 className="text-xl font-bold mb-1">{name}</h3>
       <p className="text-xs text-[#5A6B82] mb-4">{tagline}</p>
       <div className="mb-6">
-        <span className="text-4xl font-bold heading-split">PKR {price}</span>
+        <span className="text-4xl font-bold heading-split">{price}</span>
         <span className="text-[#8B9DB8] text-sm">/month</span>
       </div>
       <ul className="space-y-3 text-sm">
@@ -505,7 +501,7 @@ function PricingCard({ name, price, tagline, features, popular }: { name: string
           popular ? 'btn-electric' : 'btn-ghost'
         }`}
       >
-        {popular ? 'Free Trial Shuru Karein →' : 'Choose Plan →'}
+        {popular ? 'Start Free Trial →' : 'Choose Plan →'}
       </Link>
     </div>
   )

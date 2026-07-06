@@ -20,8 +20,8 @@ export default async function ConversationDetailPage({ params }: { params: Promi
       <main className="min-h-screen bg-[#0A1628] text-[#E8EEF7]">
         <DashboardHeader business={business} />
         <div className="max-w-3xl mx-auto p-6 text-center text-[#5A6B82]">
-          <p>Conversation nahi mila.</p>
-          <Link href="/dashboard/conversations" className="text-[#508DFF] font-medium mt-4 inline-block">← Wapas</Link>
+          <p>Conversation not found.</p>
+          <Link href="/dashboard/conversations" className="text-[#508DFF] font-medium mt-4 inline-block">← Back</Link>
         </div>
       </main>
     )
@@ -63,7 +63,7 @@ export default async function ConversationDetailPage({ params }: { params: Promi
                   : 'bg-[#EFF35F] text-[#0A1628]'
               }`}>
                 <div className="text-xs opacity-60 mb-1">
-                  {m.role === 'customer' ? 'Customer' : m.role === 'agent' ? 'AI Agent' : 'Owner'} · {new Date(m.created_at).toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' })}
+                  {m.role === 'customer' ? 'Customer' : m.role === 'agent' ? 'AI Agent' : 'Owner'} · {new Date(m.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                 </div>
                 {m.content}
               </div>
@@ -79,7 +79,7 @@ export default async function ConversationDetailPage({ params }: { params: Promi
               <div key={o.id} className="border-b border-[#508DFF]/10 pb-2 mb-2 last:border-0">
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-[#E8EEF7]">
-                    {Array.isArray(o.items) ? o.items.length : 0} items — <span className="text-[#EFF35F] font-medium">PKR {Number(o.total).toLocaleString()}</span>
+                    {Array.isArray(o.items) ? o.items.length : 0} items — <span className="text-[#EFF35F] font-medium">{Number(o.total).toLocaleString()}</span>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full ${o.status === 'confirmed' ? 'bg-[#EFF35F]/10 text-[#EFF35F]' : 'bg-[#508DFF]/10 text-[#508DFF]'}`}>
                     {o.status}

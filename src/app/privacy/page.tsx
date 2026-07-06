@@ -2,8 +2,12 @@ import Link from 'next/link'
 import { MarketingNav, MarketingFooter } from '../marketing'
 
 export const metadata = {
-  title: 'Privacy Policy — SellBot.pk',
-  description: 'SellBot.pk privacy policy — aapka data kaise use hota hai.',
+  title: 'Privacy Policy — SellBot',
+  description: 'SellBot privacy policy — how we collect, use, and protect your data.',
+  openGraph: {
+    title: 'Privacy Policy — SellBot',
+    description: 'How we collect, use, and protect your data.',
+  },
 }
 
 export default function PrivacyPage() {
@@ -25,70 +29,70 @@ export default function PrivacyPage() {
 
       <section className="py-16 px-6">
         <div className="max-w-3xl mx-auto space-y-10">
-          <PrivacySection title="1. Hum kya data collect karte hain">
+          <PrivacySection title="1. Data We Collect">
             <ul className="list-disc list-inside space-y-2 text-[#8B9DB8]">
-              <li><span className="text-[#E8EEF7]">Business info:</span> business name, industry, owner name, WhatsApp number</li>
+              <li><span className="text-[#E8EEF7]">Business info:</span> business name, industry, owner name, phone number</li>
               <li><span className="text-[#E8EEF7]">Product catalog:</span> product names, prices, descriptions, sizes</li>
               <li><span className="text-[#E8EEF7]">Conversations:</span> customer messages, AI replies, order details</li>
-              <li><span className="text-[#E8EEF7]">Customer info:</span> phone number, name (from WhatsApp), order history</li>
+              <li><span className="text-[#E8EEF7]">Customer info:</span> phone number, name, order history</li>
             </ul>
           </PrivacySection>
 
-          <PrivacySection title="2. Data kaise use hota hai">
+          <PrivacySection title="2. How We Use Your Data">
             <ul className="list-disc list-inside space-y-2 text-[#8B9DB8]">
-              <li>AI agent ki training ke liye — taake better replies de sake</li>
-              <li>Orders track karne aur reports generate karne ke liye</li>
-              <li>Abandoned inquiry follow-ups bhejne ke liye</li>
-              <li>Product recommendations improve karne ke liye</li>
+              <li>To train your AI agent to provide better replies over time</li>
+              <li>To track orders and generate revenue reports</li>
+              <li>To send follow-up messages for abandoned inquiries</li>
+              <li>To improve product recommendations for your customers</li>
             </ul>
           </PrivacySection>
 
-          <PrivacySection title="3. Data kahan store hota hai">
+          <PrivacySection title="3. Data Storage">
             <p className="text-[#8B9DB8]">
-              SellBot encrypted database (Neon Postgres, SSL/TLS) me data store karta hai. Conversations aur business data
-              sirf aapke business se related hai — kisi aur business ke saath share nahi hota.
+              SellBot stores all data in an encrypted database with SSL/TLS encryption for data in transit and at rest.
+              Your business data is isolated to your account — it is never shared with other businesses.
             </p>
           </PrivacySection>
 
-          <PrivacySection title="4. Third-party services">
+          <PrivacySection title="4. Third-Party Services">
             <ul className="list-disc list-inside space-y-2 text-[#8B9DB8]">
-              <li><span className="text-[#E8EEF7]">Baileys (WhatsApp Web protocol):</span> WhatsApp se connect karne ke liye</li>
-              <li><span className="text-[#E8EEF7]">Groq / OpenRouter:</span> AI replies generate karne ke liye (conversations encrypted bheji jati hain)</li>
-              <li><span className="text-[#E8EEF7]">Neon Postgres:</span> Data storage (encrypted, SSL)</li>
+              <li><span className="text-[#E8EEF7]">Messaging protocol provider:</span> connects your number to your messaging app</li>
+              <li><span className="text-[#E8EEF7]">AI language model provider:</span> generates replies (conversations are encrypted in transit)</li>
+              <li><span className="text-[#E8EEF7]">Database provider:</span> encrypted data storage with SSL</li>
             </ul>
             <p className="mt-3 text-[#8B9DB8]">
-              Hum kabhi bhi aapka data third parties ko sell nahi karte. AI providers sirf conversation process karne ke liye
-              temporary access rakhte hain — wo data store nahi karte.
+              We never sell your data to third parties. AI providers only have temporary access to process conversations —
+              they do not store your data.
             </p>
           </PrivacySection>
 
-          <PrivacySection title="5. Data retention">
+          <PrivacySection title="5. Data Retention">
             <p className="text-[#8B9DB8]">
-              Aap account cancel karne pe saara data 30 din me permanently delete kar diya jata hai. Trial ke dauran
-              collected data bhi trial khatam hone pe delete ho jata hai (agar paid plan me upgrade na karein).
+              When you cancel your account, all data is permanently deleted within 30 days. Data collected during a free trial
+              is deleted when the trial ends (unless you upgrade to a paid plan).
             </p>
           </PrivacySection>
 
-          <PrivacySection title="6. Aapke rights">
+          <PrivacySection title="6. Your Rights">
             <ul className="list-disc list-inside space-y-2 text-[#8B9DB8]">
-              <li>Aap kabhi bhi apna data export kar sakte hain</li>
-              <li>Aap apna account aur saara data delete kar sakte hain</li>
-              <li>Aap AI training ke liye apna data opt-out kar sakte hain</li>
-              <li>Aap customer data access/update/delete kar sakte hain</li>
+              <li>You can export your data at any time</li>
+              <li>You can delete your account and all associated data</li>
+              <li>You can opt out of AI training with your data</li>
+              <li>You can access, update, or delete customer data</li>
             </ul>
           </PrivacySection>
 
           <PrivacySection title="7. Security">
             <p className="text-[#8B9DB8]">
-              Hum SSL/TLS encryption use karte hain (data in transit + at rest). Access tokens securely store hote hain.
-              Hum regular security audits karte hain. Lekin koi system 100% secure nahi — isliye hum transparency rakhte hain.
+              We use SSL/TLS encryption for all data in transit and at rest. Access tokens are stored securely.
+              We conduct regular security audits. While no system is 100% secure, we maintain transparency about our practices.
             </p>
           </PrivacySection>
 
           <PrivacySection title="8. Contact">
             <p className="text-[#8B9DB8]">
-              Privacy se related koi sawal? <Link href="/contact" className="text-[#508DFF] hover:text-[#6FA3FF] transition">Contact page</Link> se
-              message karein ya WhatsApp pe direct baat karein.
+              Have a privacy-related question? Visit our <Link href="/contact" className="text-[#508DFF] hover:text-[#6FA3FF] transition">contact page</Link> to
+              send us a message.
             </p>
           </PrivacySection>
         </div>
@@ -97,7 +101,7 @@ export default function PrivacyPage() {
       <div className="py-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <Link href="/onboarding" className="btn-electric px-8 py-3.5 rounded-xl text-base inline-block">
-            Free Trial Shuru Karein →
+            Start Free Trial →
           </Link>
         </div>
       </div>

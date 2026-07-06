@@ -5,10 +5,9 @@ export function NoAccess() {
     <main className="min-h-screen flex items-center justify-center bg-[#0A1628] text-[#E8EEF7]">
       <div className="text-center max-w-md">
         <div className="text-5xl mb-4">🔒</div>
-        <h1 className="text-xl font-bold mb-2">Dashboard access nahi</h1>
+        <h1 className="text-xl font-bold mb-2">Dashboard access required</h1>
         <p className="text-[#8B9DB8] mb-6">
-          Aapka dashboard access token expire ho gaya hai ya set nahi hai.
-          Onboarding se dobara login karein.
+          Your access token has expired or is not set. Please log in to continue.
         </p>
         <Link
           href="/onboarding"
@@ -42,7 +41,7 @@ export function DashboardHeader({ business }: { business: { business_name: strin
         <div className="flex items-center gap-2">
           {business && business.plan === 'trial' && trialDays !== null && (
             <span className="text-xs bg-[#EFF35F]/10 text-[#EFF35F] px-3 py-1 rounded-full font-medium border border-[#EFF35F]/20">
-              {trialDays} din trial baaki
+              {trialDays} days trial left
             </span>
           )}
           {business && (
@@ -51,7 +50,7 @@ export function DashboardHeader({ business }: { business: { business_name: strin
             </span>
           )}
           <Link href="/dashboard/connect" className="text-xs bg-[#EFF35F]/10 text-[#EFF35F] px-3 py-1 rounded-full font-medium hover:bg-[#EFF35F]/20 transition border border-[#EFF35F]/20">
-            📱 WhatsApp
+            📱 Connect
           </Link>
         </div>
       </div>
