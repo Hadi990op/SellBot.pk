@@ -12,7 +12,6 @@ export default async function DashboardPage() {
 
   const bizId = business.id
 
-  // Today's stats
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const todayISO = today.toISOString()
@@ -36,55 +35,63 @@ export default async function DashboardPage() {
   const totalProducts = (productCount as any[])[0]?.cnt || 0
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[#0A1628] text-[#E8EEF7]">
       <DashboardHeader business={business} />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
-          <h2 className="text-lg font-medium mb-1">Aaj ki Report 📊</h2>
-          <p className="text-green-100 text-sm mb-6">{new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Stat label="Inquiries" value={inquiries} icon="💬" />
-            <Stat label="Orders" value={orders} icon="📦" />
-            <Stat label="COD Verified" value={codVerified} icon="✅" />
-            <Stat label="Revenue" value={`PKR ${revenue.toLocaleString()}`} icon="💰" />
+        {/* Hero report */}
+        <div className="bg-gradient-to-br from-[#508DFF] to-[#1E4566] rounded-2xl p-6 text-white mb-8 relative overflow-hidden">
+          <div className="absolute inset-0 bg-dot-grid opacity-20" />
+          <div className="relative">
+            <h2 className="text-lg font-medium mb-1">Aaj ki Report 📊</h2>
+            <p className="text-[#E8EEF7]/70 text-sm mb-6">{new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Stat label="Inquiries" value={inquiries} icon="💬" />
+              <Stat label="Orders" value={orders} icon="📦" />
+              <Stat label="COD Verified" value={codVerified} icon="✅" />
+              <Stat label="Revenue" value={`PKR ${revenue.toLocaleString()}`} icon="💰" />
+            </div>
           </div>
         </div>
 
+        {/* Quick cards */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
           <QuickCard title="Abandoned Inquiries" value={abandoned} subtitle="Follow-up needed" color="yellow" />
           <QuickCard title="Total Products" value={totalProducts} subtitle="In catalog" color="blue" />
           <QuickCard title="Plan" value={business.plan} subtitle={business.plan === 'trial' ? 'Upgrade to keep' : 'Active'} color="green" />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4">
+        {/* Nav cards */}
+        <div className="grid md:grid-cols-3 gap-4 mb-8">
           <NavCard href="/dashboard/orders" icon="📦" title="Orders" desc="Sab orders dekhein aur manage karein" />
           <NavCard href="/dashboard/conversations" icon="💬" title="Conversations" desc="Live chats dekhein — AI + human" />
           <NavCard href="/dashboard/products" icon="🏷️" title="Products" desc="Catalog add/edit karein" />
         </div>
 
-        <div className="mt-4">
+        {/* WhatsApp connect */}
+        <div className="mb-8">
           <Link
             href="/dashboard/connect"
-            className="block bg-green-50 border border-green-200 rounded-xl p-6 hover:shadow-md transition"
+            className="block bg-gradient-to-r from-[#0F2A47] to-[#16365C] border border-[#508DFF]/20 rounded-xl p-6 hover:border-[#508DFF]/40 transition"
           >
             <div className="flex items-center gap-4">
               <div className="text-3xl">📱</div>
               <div>
                 <h3 className="font-semibold mb-1">WhatsApp Connect Karein</h3>
-                <p className="text-sm text-gray-600">QR code ya 6-digit pairing code se WhatsApp connect karein — bilkul free!</p>
+                <p className="text-sm text-[#8B9DB8]">QR code ya 6-digit pairing code se WhatsApp connect karein — bilkul free!</p>
               </div>
-              <div className="ml-auto text-green-600 font-medium text-sm">Connect →</div>
+              <div className="ml-auto text-[#508DFF] font-medium text-sm">Connect →</div>
             </div>
           </Link>
         </div>
 
-        <div className="mt-8">
+        {/* Recent orders */}
+        <div>
           <h3 className="font-semibold text-lg mb-4">Recent Orders</h3>
           {ordArr.length > 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div className="glass rounded-xl overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+                <thead className="bg-[#0F2A47]/50 text-[#5A6B82] text-xs uppercase">
                   <tr>
                     <th className="text-left px-4 py-3">Customer</th>
                     <th className="text-left px-4 py-3">Items</th>
@@ -93,15 +100,15 @@ export default async function DashboardPage() {
                     <th className="text-left px-4 py-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50">
+                <tbody className="divide-y divide-[#508DFF]/10">
                   {ordArr.map((o: any) => (
-                    <tr key={o.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">{o.customer_phone}</td>
+                    <tr key={o.id} className="hover:bg-[#0F2A47]/30 transition">
+                      <td className="px-4 py-3 font-mono text-[#8B9DB8]">{o.customer_phone}</td>
                       <td className="px-4 py-3">{Array.isArray(o.items) ? o.items.length : 0} items</td>
-                      <td className="px-4 py-3 text-right font-medium">PKR {Number(o.total).toLocaleString()}</td>
-                      <td className="px-4 py-3 uppercase text-xs">{o.payment_method}</td>
+                      <td className="px-4 py-3 text-right font-medium text-[#EFF35F]">PKR {Number(o.total).toLocaleString()}</td>
+                      <td className="px-4 py-3 uppercase text-xs text-[#8B9DB8]">{o.payment_method}</td>
                       <td className="px-4 py-3">
-                        <span className={`text-xs px-2 py-1 rounded-full ${o.status === 'confirmed' ? 'bg-green-100 text-green-700' : o.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600'}`}>
+                        <span className={`text-xs px-2 py-1 rounded-full ${o.status === 'confirmed' ? 'bg-[#EFF35F]/10 text-[#EFF35F]' : o.status === 'pending' ? 'bg-[#508DFF]/10 text-[#508DFF]' : 'bg-[#0F2A47] text-[#5A6B82]'}`}>
                           {o.status}
                         </span>
                       </td>
@@ -111,7 +118,7 @@ export default async function DashboardPage() {
               </table>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400">
+            <div className="glass rounded-xl p-8 text-center text-[#5A6B82]">
               Aaj koi order nahi aaya. SellBot wait kar raha hai! 🤖
             </div>
           )}
@@ -126,32 +133,37 @@ function Stat({ label, value, icon }: { label: string; value: any; icon: string 
     <div>
       <div className="text-2xl mb-1">{icon}</div>
       <div className="text-2xl font-bold">{value}</div>
-      <div className="text-green-100 text-sm">{label}</div>
+      <div className="text-[#E8EEF7]/60 text-sm">{label}</div>
     </div>
   )
 }
 
 function QuickCard({ title, value, subtitle, color }: { title: string; value: any; subtitle: string; color: string }) {
   const colors: Record<string, string> = {
-    yellow: 'border-yellow-200 bg-yellow-50',
-    blue: 'border-blue-200 bg-blue-50',
-    green: 'border-green-200 bg-green-50',
+    yellow: 'border-[#EFF35F]/20 bg-[#EFF35F]/5',
+    blue: 'border-[#508DFF]/20 bg-[#508DFF]/5',
+    green: 'border-[#508DFF]/20 bg-[#508DFF]/5',
+  }
+  const textColors: Record<string, string> = {
+    yellow: 'text-[#EFF35F]',
+    blue: 'text-[#508DFF]',
+    green: 'text-[#508DFF]',
   }
   return (
-    <div className={`border rounded-xl p-4 ${colors[color] || 'border-gray-200 bg-white'}`}>
-      <div className="text-sm text-gray-500">{title}</div>
-      <div className="text-2xl font-bold text-gray-900 mt-1">{value}</div>
-      <div className="text-xs text-gray-400 mt-1">{subtitle}</div>
+    <div className={`border rounded-xl p-4 ${colors[color] || 'border-[#508DFF]/20 bg-[#0F2A47]/30'}`}>
+      <div className="text-sm text-[#8B9DB8]">{title}</div>
+      <div className={`text-2xl font-bold mt-1 ${textColors[color] || 'text-[#E8EEF7]'}`}>{value}</div>
+      <div className="text-xs text-[#5A6B82] mt-1">{subtitle}</div>
     </div>
   )
 }
 
 function NavCard({ href, icon, title, desc }: { href: string; icon: string; title: string; desc: string }) {
   return (
-    <Link href={href} className="block bg-white rounded-xl border border-gray-100 p-6 hover:shadow-md hover:border-green-200 transition">
+    <Link href={href} className="block glass rounded-xl p-6 hover:border-[#508DFF]/40 transition">
       <div className="text-3xl mb-3">{icon}</div>
       <h3 className="font-semibold mb-1">{title}</h3>
-      <p className="text-sm text-gray-500">{desc}</p>
+      <p className="text-sm text-[#8B9DB8]">{desc}</p>
     </Link>
   )
 }
