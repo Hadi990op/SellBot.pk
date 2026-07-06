@@ -21,8 +21,8 @@ export function NoAccess() {
   )
 }
 
-export function DashboardHeader({ business }: { business: { business_name: string; plan: string; trial_ends_at?: string | null } }) {
-  const trialDays = business.trial_ends_at
+export function DashboardHeader({ business }: { business: { business_name: string; plan: string; trial_ends_at?: string | null } | null }) {
+  const trialDays = business?.trial_ends_at
     ? Math.max(0, Math.ceil((new Date(business.trial_ends_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
     : null
 
@@ -32,19 +32,24 @@ export function DashboardHeader({ business }: { business: { business_name: strin
         <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition">
           <span className="text-2xl">🤖</span>
           <div>
-            <h1 className="font-bold text-lg">{business.business_name}</h1>
+            <h1 className="font-bold text-lg">{business?.business_name || 'SellBot'}</h1>
             <p className="text-xs text-gray-400">SellBot Dashboard</p>
           </div>
         </Link>
         <div className="flex items-center gap-3">
-          {business.plan === 'trial' && trialDays !== null && (
+          {business && business.plan === 'trial' && trialDays !== null && (
             <span className="text-xs bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-medium">
               {trialDays} din trial baaki
             </span>
           )}
-          <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium uppercase">
-            {business.plan}
-          </span>
+          {business && (
+            <span className="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium uppercase">
+              {business.plan}
+            </span>
+          )}
+          <Link href="/dashboard/connect" className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium hover:bg-blue-200 transition">
+            📱 WhatsApp
+          </Link>
         </div>
       </div>
     </header>

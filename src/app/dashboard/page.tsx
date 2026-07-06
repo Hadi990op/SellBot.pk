@@ -63,23 +63,21 @@ export default async function DashboardPage() {
           <NavCard href="/dashboard/products" icon="🏷️" title="Products" desc="Catalog add/edit karein" />
         </div>
 
-        {!business.phone_number_id && (
-          <div className="mt-4">
-            <Link
-              href="/dashboard/whatsapp-setup"
-              className="block bg-yellow-50 border border-yellow-200 rounded-xl p-6 hover:shadow-md transition"
-            >
-              <div className="flex items-center gap-4">
-                <div className="text-3xl">📱</div>
-                <div>
-                  <h3 className="font-semibold mb-1">WhatsApp Connect Karein</h3>
-                  <p className="text-sm text-gray-600">Abhi WhatsApp connect nahi hai. Setup guide follow karein.</p>
-                </div>
-                <div className="ml-auto text-green-600 font-medium text-sm">Setup →</div>
+        <div className="mt-4">
+          <Link
+            href="/dashboard/connect"
+            className="block bg-green-50 border border-green-200 rounded-xl p-6 hover:shadow-md transition"
+          >
+            <div className="flex items-center gap-4">
+              <div className="text-3xl">📱</div>
+              <div>
+                <h3 className="font-semibold mb-1">WhatsApp Connect Karein</h3>
+                <p className="text-sm text-gray-600">QR code ya 6-digit pairing code se WhatsApp connect karein — bilkul free!</p>
               </div>
-            </Link>
-          </div>
-        )}
+              <div className="ml-auto text-green-600 font-medium text-sm">Connect →</div>
+            </div>
+          </Link>
+        </div>
 
         <div className="mt-8">
           <h3 className="font-semibold text-lg mb-4">Recent Orders</h3>
