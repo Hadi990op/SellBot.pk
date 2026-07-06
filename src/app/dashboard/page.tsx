@@ -68,7 +68,7 @@ export default async function DashboardPage() {
           <NavCard href="/dashboard/products" icon="🏷️" title="Products" desc="Add or edit your catalog" />
         </div>
 
-        {/* WhatsApp connect */}
+        {/* Connect your number */}
         <div className="mb-8">
           <Link
             href="/dashboard/connect"
